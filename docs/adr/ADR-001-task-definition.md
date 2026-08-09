@@ -3,7 +3,7 @@
 - Durum: Kabul edildi
 - Tarih: 9 Ağustos 2026
 - Karar sahipleri: RadarIQops ürün ve mühendislik ekibi
-- İlgili belgeler: [Ürün çerçevesi](../product-charter.md), [veri seti değerlendirmesi](../dataset-evaluation.md), [`data inspect` sözleşmesi](../data-inspect.md)
+- İlgili belgeler: [Ürün çerçevesi](../product-charter.md), [veri seti değerlendirmesi](../dataset-evaluation.md), [`data inspect` sözleşmesi](../data-inspect.md), [ADR-002 model değerlendirmesi](ADR-002-model-evaluation.md)
 
 ## Bağlam
 
