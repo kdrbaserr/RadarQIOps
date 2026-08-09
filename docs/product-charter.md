@@ -88,6 +88,8 @@ Bu konumlandırmanın değişebilmesi için temsil gücü gösterilmiş, etiketl
 - Offline temel akışın çevrimiçi servislere bağımlı olmadan tamamlanabilmesi.
 - Deneysel sonuçlarla doğrulanmış gerçek veri sonuçlarının arayüz ve raporlarda açıkça ayrılması.
 
+Model değerlendirmesinde bağlamsız veya tüm koşullar için geçerliymiş gibi sunulan sabit bir `%90` başarı/doğruluk hedefi kullanılmaz. Birincil Macro-F1, sınıf recall, SNR dilimi performansı, kalibrasyon, model boyutu, p95 gecikme ve hata oranı [ADR-002](adr/ADR-002-model-evaluation.md) kurallarına göre birlikte raporlanır.
+
 ## Değişiklik ilkesi
 
 Hedef kullanıcı, karar çıktısı, veri kaynağı veya ürün iddiasındaki önemli bir değişiklik bu belge güncellenmeden ürün kapsamına alınmaz. “Hedef sınıflandırıcı” konumlandırmasına geçiş, gerçek veri ve doğrulama koşulları sağlanmadan yalnızca pazarlama kararıyla yapılamaz.
