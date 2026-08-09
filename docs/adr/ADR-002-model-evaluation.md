@@ -4,7 +4,7 @@
 - Tarih: 9 Ağustos 2026
 - Karar sahipleri: RadarIQops ürün ve mühendislik ekibi
 - İlgili karar: [ADR-001 görev tanımı](ADR-001-task-definition.md)
-- İlgili belgeler: [Ürün çerçevesi](../product-charter.md), [veri inceleme sözleşmesi](../data-inspect.md)
+- İlgili belgeler: [Ürün çerçevesi](../product-charter.md), [veri inceleme sözleşmesi](../data-inspect.md), [ML yaşam döngüsü mimarisi](../architecture/ml-lifecycle.md)
 
 ## Bağlam
 
@@ -254,4 +254,3 @@ Bir kabul eşiği gerekiyorsa:
 - Yüksek sınıflandırma skoru tek başına dağıtıma kabul anlamına gelmez.
 - Kalibrasyon, boyut, gecikme ve hata oranı model kartının zorunlu bölümleridir.
 - Pazarlama veya README başarı iddiası, bu ADR'ye uygun sürümlenmiş değerlendirme raporuna bağlanmalıdır.
-
