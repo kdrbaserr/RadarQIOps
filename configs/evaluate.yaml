@@ -1,0 +1,6 @@
+{
+  "model_path": "artifacts/model.npz",
+  "test_features_path": "artifacts/test_features.npy",
+  "test_labels_path": "artifacts/test_labels.npy",
+  "output_path": "artifacts/evaluation.json"
+}

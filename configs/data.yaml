@@ -1,0 +1,6 @@
+{
+  "dataset": "npy",
+  "features_path": "data/processed/features.npy",
+  "labels_path": "data/processed/labels.npy",
+  "test_fraction": 0.2
+}
