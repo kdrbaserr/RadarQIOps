@@ -10,7 +10,7 @@
 RadarIQops kapsamında iki farklı problem adı kullanılabilir:
 
 1. **Gerçek radar hedef sınıflandırması:** Radar ölçümünden otomobil, yaya, gemi, uçak veya askerî araç gibi fiziksel bir hedef sınıfını tahmin etmek.
-2. **Modülasyon sınıflandırması:** Bir I/Q sinyal penceresinden BPSK, QPSK, QAM veya FM gibi haberleşme modülasyon türünü tahmin etmek.
+1. **Modülasyon sınıflandırması:** Bir I/Q sinyal penceresinden BPSK, QPSK, QAM veya FM gibi haberleşme modülasyon türünü tahmin etmek.
 
 Bu görevler aynı değildir. RadioML/DeepSig etiketleri fiziksel hedefi değil sinyalin modülasyon biçimini temsil eder. Buna rağmen görev yalnızca “radar sınıflandırması” olarak adlandırılırsa kullanıcı, model çıktısını gerçek hedef teşhisi sanabilir.
 
@@ -115,13 +115,13 @@ Pickle tabanlı RadioML 2016 verisi yalnızca güvenilir kaynaktan indirildikten
 “Gerçek radar hedef sınıflandırması” görevine geçiş ancak aşağıdaki koşulların tamamı sağlandığında değerlendirmeye alınır:
 
 1. Gerçek radar ölçümünden oluşan veri seti resmen seçilmiş olmalı.
-2. Etiketler fiziksel hedef sınıflarını temsil etmeli ve sınıf ontolojisi yazılı olmalı.
-3. Veri lisansı; amaçlanan araştırma/ticari kullanıma, türetilmiş çıktılara ve gerekli yeniden dağıtıma açıkça izin vermeli.
-4. `radariq data inspect` ile shape, dtype, etiket, SNR ve grup/sequence alanları doğrulanmalı; inceleme JSON'u sürümlenmeli.
-5. Hedef veya sekans kimliği üzerinden eğitim/doğrulama/test ayrımı yapılarak veri sızıntısı kontrol edilmeli.
-6. Sensör, saha, hava, mesafe, bakış açısı, SNR ve sınıf dengesi bakımından temsil sınırları belgelenmeli.
-7. Kabul metrikleri, bağımsız test yöntemi ve yanlış sınıflandırmanın ürün etkisi onaylanmalı.
-8. [Ürün çerçevesi](../product-charter.md) yeni kanıtlarla güncellenmeli.
+1. Etiketler fiziksel hedef sınıflarını temsil etmeli ve sınıf ontolojisi yazılı olmalı.
+1. Veri lisansı; amaçlanan araştırma/ticari kullanıma, türetilmiş çıktılara ve gerekli yeniden dağıtıma açıkça izin vermeli.
+1. `radariq data inspect` ile shape, dtype, etiket, SNR ve grup/sequence alanları doğrulanmalı; inceleme JSON'u sürümlenmeli.
+1. Hedef veya sekans kimliği üzerinden eğitim/doğrulama/test ayrımı yapılarak veri sızıntısı kontrol edilmeli.
+1. Sensör, saha, hava, mesafe, bakış açısı, SNR ve sınıf dengesi bakımından temsil sınırları belgelenmeli.
+1. Kabul metrikleri, bağımsız test yöntemi ve yanlış sınıflandırmanın ürün etkisi onaylanmalı.
+1. [Ürün çerçevesi](../product-charter.md) yeni kanıtlarla güncellenmeli.
 
 Koşullar sağlanırsa ADR-001'in anlamı geriye dönük değiştirilmez. Yeni bir ADR hazırlanır, ADR-001 “yerine geçildi” durumuna alınır ve yeni teknik görev kimliği `radar_target_classification` olarak ayrıca tanımlanır.
 

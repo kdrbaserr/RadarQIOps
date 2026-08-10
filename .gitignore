@@ -2,7 +2,13 @@ __pycache__/
 *.py[cod]
 *.egg-info/
 .pytest_cache/
+.pre-commit-cache/
 .venv/
+.uv-cache/
+.uv-python/
 dist/
 build/
 
+artifacts/
+data/
+.ipynb_checkpoints/

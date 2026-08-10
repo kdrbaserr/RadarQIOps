@@ -113,11 +113,11 @@ Boyut puanı veri kalitesini değil, ilk pilotu indirme, saklama ve tekrarlama k
 ## Ürün kararı
 
 1. **RadioML yalnızca altyapı veri setidir.** I/Q içe aktarma, model deneyi ve SNR kırılımı için kullanılabilir; ürün hedef sınıflandırıcı olarak sunulamaz.
-2. **İlk gerçek radar pilotu RadarScenes ile yapılmalıdır.** İndirme kararlı, boyut yönetilebilir ve fiziksel sınıflar açıktır. Sonuç “otomotiv radar nokta sınıflandırma araştırması” olarak adlandırılmalıdır; ticari kullanım için ek lisans gerekir.
-3. **Sabit radar tensörü gerekiyorsa CARRADA ikinci seçimdir.** Daha yüksek depolama maliyeti kabul edilerek üç sınıflı kontrollü deney yapılabilir.
-4. **Ticari lisans yolu için RADDet öncelikli doğrulama adayıdır.** Önce indirme bağlantısı, seçilen paket boyutu ve CC BY 4.0 lisans dosyasının veriyle birlikte geldiği doğrulanmalıdır.
-5. **MSTAR ayrı bir hukuki/teknik keşif işidir.** Askerî hedef iddiası ancak resmi verinin kullanım hakkı, yeniden dağıtım koşulu, veri şeması ve ölçüm kapsamı yazılı biçimde doğrulandıktan sonra değerlendirilebilir.
-6. **Hiçbir aday tek başına operasyonel ürün doğrulaması sağlamaz.** Eğitim/test ayrımı, veri sızıntısı kontrolü, sınıf dengesi, sensör alan kayması ve bağımsız gerçek-saha doğrulaması ayrıca yapılmalıdır.
+1. **İlk gerçek radar pilotu RadarScenes ile yapılmalıdır.** İndirme kararlı, boyut yönetilebilir ve fiziksel sınıflar açıktır. Sonuç “otomotiv radar nokta sınıflandırma araştırması” olarak adlandırılmalıdır; ticari kullanım için ek lisans gerekir.
+1. **Sabit radar tensörü gerekiyorsa CARRADA ikinci seçimdir.** Daha yüksek depolama maliyeti kabul edilerek üç sınıflı kontrollü deney yapılabilir.
+1. **Ticari lisans yolu için RADDet öncelikli doğrulama adayıdır.** Önce indirme bağlantısı, seçilen paket boyutu ve CC BY 4.0 lisans dosyasının veriyle birlikte geldiği doğrulanmalıdır.
+1. **MSTAR ayrı bir hukuki/teknik keşif işidir.** Askerî hedef iddiası ancak resmi verinin kullanım hakkı, yeniden dağıtım koşulu, veri şeması ve ölçüm kapsamı yazılı biçimde doğrulandıktan sonra değerlendirilebilir.
+1. **Hiçbir aday tek başına operasyonel ürün doğrulaması sağlamaz.** Eğitim/test ayrımı, veri sızıntısı kontrolü, sınıf dengesi, sensör alan kayması ve bağımsız gerçek-saha doğrulaması ayrıca yapılmalıdır.
 
 ## İndirme öncesi kabul kontrolü
 

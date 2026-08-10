@@ -109,7 +109,7 @@ Temperature scaling gibi bir kalibrasyon yöntemi kullanılırsa yalnızca valid
 İki ayrı değer zorunludur:
 
 1. **Artifact boyutu:** Dağıtılan model dosyasının byte cinsinden gerçek dosya boyutu.
-2. **Parametre sayısı:** Eğitilebilir ve toplam parametre sayısı.
+1. **Parametre sayısı:** Eğitilebilir ve toplam parametre sayısı.
 
 MiB gösterimi şu şekilde hesaplanır:
 

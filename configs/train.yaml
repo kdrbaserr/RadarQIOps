@@ -1,0 +1,6 @@
+{
+  "seed": 42,
+  "data_config": "configs/data.yaml",
+  "model_config": "configs/model.yaml",
+  "output_dir": "artifacts"
+}

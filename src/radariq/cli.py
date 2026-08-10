@@ -3,10 +3,12 @@ from __future__ import annotations
 import argparse
 import json
 import sys
+from collections.abc import Sequence
 from pathlib import Path
-from typing import Sequence
 
 from radariq.data_inspect import DATASET_CHOICES, InspectError, inspect_dataset
+from radariq.evaluation.pipeline import evaluate_from_config
+from radariq.training.pipeline import train_from_config
 
 
 def _build_parser() -> argparse.ArgumentParser:
@@ -58,6 +60,12 @@ def _build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Girintisiz, tek satırlık JSON üret",
     )
+
+    train_parser = subcommands.add_parser("train", help="Config ile model eğit")
+    train_parser.add_argument("--config", type=Path, default=Path("configs/train.yaml"))
+
+    evaluate_parser = subcommands.add_parser("evaluate", help="Modeli değerlendir")
+    evaluate_parser.add_argument("--config", type=Path, default=Path("configs/evaluate.yaml"))
     return parser
 
 
@@ -66,6 +74,13 @@ def main(argv: Sequence[str] | None = None) -> int:
     args = parser.parse_args(argv)
 
     try:
+        if args.command == "train":
+            print(json.dumps(train_from_config(args.config), ensure_ascii=False, indent=2))
+            return 0
+        if args.command == "evaluate":
+            print(json.dumps(evaluate_from_config(args.config), ensure_ascii=False, indent=2))
+            return 0
+
         result = inspect_dataset(
             dataset=args.dataset,
             path=args.path,
@@ -86,11 +101,10 @@ def main(argv: Sequence[str] | None = None) -> int:
         else:
             print(payload)
         return 0
-    except (InspectError, OSError, ValueError) as exc:
+    except (InspectError, OSError, KeyError, ValueError) as exc:
         print(json.dumps({"error": str(exc)}, ensure_ascii=False), file=sys.stderr)
         return 2
 
 
 if __name__ == "__main__":
     raise SystemExit(main())
-
