@@ -13,7 +13,8 @@ def create_app(model_path: str | Path | None = None):
     except ImportError as exc:
         raise RuntimeError("API için 'pip install -e .[api]' çalıştırın") from exc
 
-    selected_path = Path(model_path or os.getenv("RADARIQ_MODEL_PATH", "artifacts/model.npz"))
+    selected_model = model_path if model_path is not None else os.getenv("RADARIQ_MODEL_PATH", "artifacts/model.npz")
+    selected_path = Path(selected_model)
     app = FastAPI(title="RadarIQops", version="0.1.0")
 
     class PredictionRequest(BaseModel):

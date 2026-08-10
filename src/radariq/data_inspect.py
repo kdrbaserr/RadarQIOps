@@ -274,10 +274,12 @@ def _check_index(index: int, total: int) -> None:
 
 def _describe_dtype(dtype: np.dtype[Any]) -> str | dict[str, Any]:
     if dtype.names:
+        fields = dtype.fields
+        assert fields is not None
         return {
             "kind": "structured",
             "fields": {
-                name: str(dtype.fields[name][0])
+                name: str(fields[name][0])
                 for name in dtype.names
             },
         }
@@ -287,12 +289,14 @@ def _describe_dtype(dtype: np.dtype[Any]) -> str | dict[str, Any]:
 def _statistics(sample: Any) -> dict[str, Any]:
     array = np.asarray(sample)
     if array.dtype.names:
+        fields = array.dtype.fields
+        assert fields is not None
         return {
             "basis": "structured_fields",
             "fields": {
                 name: _numeric_statistics(np.asarray(array[name]))
                 for name in array.dtype.names
-                if np.issubdtype(array.dtype.fields[name][0], np.number)
+                if np.issubdtype(fields[name][0], np.number)
             },
         }
     return _numeric_statistics(array)

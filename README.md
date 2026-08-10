@@ -5,18 +5,15 @@ Radar/sensör verilerini incelemek, tekrarlanabilir deneyler yürütmek ve sonu�
 ## Yerel başlangıç
 
 ```powershell
-python -m venv .venv
-.venv\Scripts\Activate.ps1
-python -m pip install -e ".[dev,api,notebooks]"
-python -m pytest
+uv sync --locked --all-extras
+uv run poe check
 ```
 
-`configs/data.yaml` içindeki veri yollarını hazırladıktan sonra:
+API stack'inin tanımını doğrulamak ve servisi başlatmak için:
 
 ```powershell
-radariq train --config configs/train.yaml
-radariq evaluate --config configs/evaluate.yaml
-uvicorn radariq.services.api.app:app --reload
+uv run poe compose-config
+uv run poe compose-up
 ```
 
-Colab girişleri `notebooks/colab/` altındadır. Eğitim ve değerlendirme mantığı notebook'larda tekrarlanmaz; `src/radariq/` paketinden çağrılır.
+Nihai model henüz üretilmediği için API health kontrolü geçer, readiness kontrolü `false` döner. Colab eğitimi Google Drive'da bağımsız yürütülür ve model seçilene kadar bu repo ile senkronize edilmez. Komut ayrıntıları [geliştirici komutları](docs/developer-commands.md) belgesindedir.

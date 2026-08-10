@@ -20,7 +20,11 @@ serve = [
 
 [dependency-groups]
 dev = [
+  "httpx>=0.28,<1",
+  "mypy>=1.18,<2",
+  "poethepoet>=0.37,<1",
   "pytest>=8.4,<9",
+  "ruff>=0.12,<1",
 ]
 
 [project.scripts]
@@ -34,4 +38,18 @@ testpaths = ["tests"]
 
 [tool.uv]
 default-groups = ["dev"]
+
+[tool.poe.tasks]
+setup = { cmd = "uv sync --locked --all-extras", help = "Kilitli yerel geliştirme ortamını kur" }
+lint = { cmd = "ruff check --select E9,F63,F7,F82 src tests tools", help = "Kesin Python hataları için hızlı lint kontrolü yap" }
+typecheck = { cmd = "mypy --ignore-missing-imports src", help = "Python tip kontrolünü çalıştır" }
+test = { cmd = "pytest -q", help = "Lokal testleri çalıştır" }
+integration-test = { cmd = "pytest -q tests/test_pipeline.py", help = "Lokal pipeline entegrasyon testini çalıştır" }
+api-smoke = { cmd = "python tools/api_smoke.py", help = "API sözleşmesinin temel smoke kontrolünü çalıştır" }
+compose-config = { cmd = "docker compose -f infra/compose.yaml config --quiet", help = "Compose tanımını doğrula" }
+compose-up = { cmd = "docker compose -f infra/compose.yaml up --build", help = "Lokal API stack'ini oluştur ve başlat" }
+
+[tool.poe.tasks.check]
+help = "Hızlı lokal kalite komutlarını sırayla çalıştır"
+sequence = ["lint", "typecheck", "test", "integration-test", "api-smoke"]
 
