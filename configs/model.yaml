@@ -1,0 +1,4 @@
+{
+  "type": "nearest_centroid",
+  "artifact_path": "artifacts/model.npz"
+}
