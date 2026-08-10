@@ -219,13 +219,12 @@ Retraining sonucunda mevcut production model değiştirilmez. Yeni run önce ADR
 ## Uygulama sırası
 
 1. DVC veri manifesti ve remote erişim politikası.
-2. Tek komutla eğitim ve ADR-002 JSON değerlendirme raporu.
-3. MLflow tracking/registry ve zorunlu lineage etiketleri.
-4. Sürüm sabitlenmiş inference API.
-5. Tekrarlanabilir OCI build, SBOM, tarama ve imza.
-6. Kubernetes staging deployment, health probe, kaynak limiti ve rollback.
-7. Operasyon telemetry'si ve model sürümü ilişkilendirmesi.
-8. Drift manifesti, alarm ve insan onaylı retraining akışı.
+1. Tek komutla eğitim ve ADR-002 JSON değerlendirme raporu.
+1. MLflow tracking/registry ve zorunlu lineage etiketleri.
+1. Sürüm sabitlenmiş inference API.
+1. Tekrarlanabilir OCI build, SBOM, tarama ve imza.
+1. Kubernetes staging deployment, health probe, kaynak limiti ve rollback.
+1. Operasyon telemetry'si ve model sürümü ilişkilendirmesi.
+1. Drift manifesti, alarm ve insan onaylı retraining akışı.
 
 Bu sıra değiştirilirse atlanan kontrol kapısı ve risk sahibi ayrıca kaydedilmelidir.
-

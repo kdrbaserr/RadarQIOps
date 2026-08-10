@@ -2,12 +2,12 @@ from __future__ import annotations
 
 import json
 import pickle
+from collections.abc import Iterable
 from pathlib import Path
-from typing import Any, Iterable
+from typing import Any
 
 import h5py
 import numpy as np
-
 
 DATASET_CHOICES = (
     "radioml-2016.10a",
@@ -196,9 +196,7 @@ def _inspect_radarscenes(path: Path, sample_index: int) -> dict[str, Any]:
     }
 
 
-def _inspect_npy(
-    path: Path, sample_index: int, metadata_path: Path | None
-) -> dict[str, Any]:
+def _inspect_npy(path: Path, sample_index: int, metadata_path: Path | None) -> dict[str, Any]:
     if sample_index != 0:
         raise InspectError(
             "NPY okuyucusunda her dosya tek örnek kabul edilir; --sample-index 0 kullanın"
@@ -245,9 +243,7 @@ def _find_h5_key(
         if candidate in handle:
             return candidate
     if required:
-        raise InspectError(
-            "HDF5 içinde beklenen veri alanı bulunamadı: " + ", ".join(candidates)
-        )
+        raise InspectError("HDF5 içinde beklenen veri alanı bulunamadı: " + ", ".join(candidates))
     return None
 
 
@@ -278,10 +274,7 @@ def _describe_dtype(dtype: np.dtype[Any]) -> str | dict[str, Any]:
         assert fields is not None
         return {
             "kind": "structured",
-            "fields": {
-                name: str(fields[name][0])
-                for name in dtype.names
-            },
+            "fields": {name: str(fields[name][0]) for name in dtype.names},
         }
     return str(dtype)
 
@@ -303,10 +296,7 @@ def _statistics(sample: Any) -> dict[str, Any]:
 
 
 def _numeric_statistics(array: np.ndarray[Any, Any]) -> dict[str, Any]:
-    if not (
-        np.issubdtype(array.dtype, np.number)
-        or np.issubdtype(array.dtype, np.bool_)
-    ):
+    if not (np.issubdtype(array.dtype, np.number) or np.issubdtype(array.dtype, np.bool_)):
         return {"basis": "non_numeric", "count": int(array.size)}
 
     basis = "magnitude" if np.iscomplexobj(array) else "value"
@@ -366,4 +356,3 @@ def _json_safe(value: Any) -> Any:
     if isinstance(value, (list, tuple)):
         return [_json_safe(item) for item in value]
     return value
-

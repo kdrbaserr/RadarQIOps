@@ -21,9 +21,21 @@ def evaluate_from_config(config_path: str | Path) -> dict[str, Any]:
         true_positive = int(np.sum((labels == label) & (predictions == label)))
         false_positive = int(np.sum((labels != label) & (predictions == label)))
         false_negative = int(np.sum((labels == label) & (predictions != label)))
-        precision = true_positive / (true_positive + false_positive) if true_positive + false_positive else 0.0
-        recall = true_positive / (true_positive + false_negative) if true_positive + false_negative else None
-        f1 = 2 * precision * recall / (precision + recall) if recall is not None and precision + recall else 0.0
+        precision = (
+            true_positive / (true_positive + false_positive)
+            if true_positive + false_positive
+            else 0.0
+        )
+        recall = (
+            true_positive / (true_positive + false_negative)
+            if true_positive + false_negative
+            else None
+        )
+        f1 = (
+            2 * precision * recall / (precision + recall)
+            if recall is not None and precision + recall
+            else 0.0
+        )
         class_metrics[str(label)] = {"precision": precision, "recall": recall, "f1": f1}
     present_f1: list[float] = []
     present_recall: list[float] = []
@@ -34,7 +46,7 @@ def evaluate_from_config(config_path: str | Path) -> dict[str, Any]:
             present_recall.append(recall_value)
     report = {
         "schema_version": "1.0",
-        "samples": int(len(labels)),
+        "samples": len(labels),
         "accuracy": float(np.mean(predictions == labels)),
         "macro_f1": float(np.mean(present_f1)) if present_f1 else None,
         "macro_recall": float(np.mean(present_recall)) if present_recall else None,

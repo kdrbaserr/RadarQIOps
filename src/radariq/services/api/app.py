@@ -13,7 +13,11 @@ def create_app(model_path: str | Path | None = None):
     except ImportError as exc:
         raise RuntimeError("API için 'pip install -e .[api]' çalıştırın") from exc
 
-    selected_model = model_path if model_path is not None else os.getenv("RADARIQ_MODEL_PATH", "artifacts/model.npz")
+    selected_model = (
+        model_path
+        if model_path is not None
+        else os.getenv("RADARIQ_MODEL_PATH", "artifacts/model.npz")
+    )
     selected_path = Path(selected_model)
     app = FastAPI(title="RadarIQops", version="0.1.0")
 
@@ -33,7 +37,11 @@ def create_app(model_path: str | Path | None = None):
         if not selected_path.exists():
             raise HTTPException(status_code=503, detail="Model artifact bulunamadı")
         classes, centroids = load_model(selected_path)
-        return {"type": "nearest_centroid", "classes": classes.tolist(), "features": int(centroids.shape[1])}
+        return {
+            "type": "nearest_centroid",
+            "classes": classes.tolist(),
+            "features": int(centroids.shape[1]),
+        }
 
     @app.post("/predict")
     def run_prediction(request: PredictionRequest) -> dict[str, object]:

@@ -3,8 +3,8 @@ from __future__ import annotations
 import argparse
 import json
 import sys
+from collections.abc import Sequence
 from pathlib import Path
-from typing import Sequence
 
 from radariq.data_inspect import DATASET_CHOICES, InspectError, inspect_dataset
 from radariq.evaluation.pipeline import evaluate_from_config
@@ -108,4 +108,3 @@ def main(argv: Sequence[str] | None = None) -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

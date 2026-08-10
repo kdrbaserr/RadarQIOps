@@ -20,11 +20,15 @@ serve = [
 
 [dependency-groups]
 dev = [
+  "detect-secrets>=1.5,<2",
   "httpx>=0.28,<1",
+  "mdformat>=0.7,<1",
   "mypy>=1.18,<2",
   "poethepoet>=0.37,<1",
+  "pre-commit>=4,<5",
   "pytest>=8.4,<9",
   "ruff>=0.12,<1",
+  "yamllint>=1.37,<2",
 ]
 
 [project.scripts]
@@ -36,20 +40,52 @@ where = ["src"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 
+[tool.mypy]
+python_version = "3.11"
+ignore_missing_imports = true
+
 [tool.uv]
 default-groups = ["dev"]
 
 [tool.poe.tasks]
 setup = { cmd = "uv sync --locked --all-extras", help = "Kilitli yerel geliştirme ortamını kur" }
-lint = { cmd = "ruff check --select E9,F63,F7,F82 src tests tools", help = "Kesin Python hataları için hızlı lint kontrolü yap" }
-typecheck = { cmd = "mypy --ignore-missing-imports src", help = "Python tip kontrolünü çalıştır" }
+lint = { cmd = "ruff check src tests tools", help = "Python lint ve import sırası kontrolünü çalıştır" }
+lint-fix = { cmd = "ruff check --fix src tests tools", help = "Güvenli Ruff düzeltmelerini yerelde uygula" }
+format-python = { cmd = "ruff format src tests tools", help = "Python kaynaklarını yerelde formatla" }
+format-markdown = { cmd = "mdformat README.md docs", help = "README ve docs Markdown dosyalarını yerelde formatla" }
+format-check = { cmd = "ruff format --check src tests tools", help = "Python formatını dosya değiştirmeden kontrol et" }
+markdown-check = { cmd = "mdformat --check README.md docs", help = "Markdown formatını dosya değiştirmeden kontrol et" }
+yaml-check = { cmd = "yamllint -c .yamllint.yaml configs infra/compose.yaml .pre-commit-config.yaml", help = "YAML dosyalarını kontrol et" }
+typecheck = { cmd = "mypy src", help = "Python tip kontrolünü çalıştır" }
 test = { cmd = "pytest -q", help = "Lokal testleri çalıştır" }
 integration-test = { cmd = "pytest -q tests/test_pipeline.py", help = "Lokal pipeline entegrasyon testini çalıştır" }
 api-smoke = { cmd = "python tools/api_smoke.py", help = "API sözleşmesinin temel smoke kontrolünü çalıştır" }
 compose-config = { cmd = "docker compose -f infra/compose.yaml config --quiet", help = "Compose tanımını doğrula" }
 compose-up = { cmd = "docker compose -f infra/compose.yaml up --build", help = "Lokal API stack'ini oluştur ve başlat" }
+install-hooks = { cmd = "pre-commit install", env = { PRE_COMMIT_HOME = ".pre-commit-cache" }, help = "Git pre-commit hook'unu kur" }
+precommit = { cmd = "pre-commit run --all-files", env = { PRE_COMMIT_HOME = ".pre-commit-cache" }, help = "Tüm pre-commit kontrollerini çalıştır" }
+
+[tool.poe.tasks.format]
+help = "Yerel otomatik Python ve Markdown formatını uygula"
+sequence = ["lint-fix", "format-python", "format-markdown"]
 
 [tool.poe.tasks.check]
 help = "Hızlı lokal kalite komutlarını sırayla çalıştır"
-sequence = ["lint", "typecheck", "test", "integration-test", "api-smoke"]
+sequence = ["lint", "format-check", "markdown-check", "yaml-check", "typecheck", "test", "integration-test", "api-smoke"]
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+extend-exclude = ["output", "tmp"]
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F", "I", "UP", "B", "SIM", "RUF"]
+ignore = ["E501", "RUF001", "RUF002", "RUF003"]
+fixable = ["ALL"]
+unfixable = []
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "lf"
 

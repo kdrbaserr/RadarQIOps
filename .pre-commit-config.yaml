@@ -1,0 +1,52 @@
+repos:
+  - repo: local
+    hooks:
+      - id: ruff-check
+        name: ruff check
+        entry: uv run --no-sync ruff check
+        language: system
+        types:
+          - python
+        args:
+          - --force-exclude
+
+      - id: ruff-format-check
+        name: ruff format check
+        entry: uv run --no-sync ruff format
+        language: system
+        types:
+          - python
+        args:
+          - --check
+          - --force-exclude
+
+      - id: yaml-check
+        name: yamllint
+        entry: uv run --no-sync yamllint
+        language: system
+        types:
+          - yaml
+        args:
+          - -c
+          - .yamllint.yaml
+
+      - id: markdown-check
+        name: mdformat check
+        entry: uv run --no-sync mdformat
+        language: system
+        types:
+          - markdown
+        args:
+          - --check
+        exclude: ^output/
+
+      - id: detect-secrets
+        name: detect secrets
+        entry: uv run --no-sync detect-secrets-hook
+        language: system
+        types:
+          - text
+        args:
+          - --baseline
+          - .secrets.baseline
+        exclude: ^(?:uv\.lock|output/|tmp/)

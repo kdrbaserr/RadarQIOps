@@ -1,15 +1,16 @@
 from __future__ import annotations
 
 import warnings
+from importlib import import_module
 from pathlib import Path
 
 from starlette.exceptions import StarletteDeprecationWarning
 
+from radariq.services.api.app import create_app
+
 warnings.filterwarnings("ignore", category=StarletteDeprecationWarning)
 
-from fastapi.testclient import TestClient
-
-from radariq.services.api.app import create_app
+TestClient = import_module("fastapi.testclient").TestClient
 
 
 def main() -> None:
