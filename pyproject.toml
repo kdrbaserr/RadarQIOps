@@ -39,6 +39,7 @@ where = ["src"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+pythonpath = ["."]
 addopts = ["--strict-config", "--strict-markers"]
 markers = [
   "unit: hızlı ve dış kaynaksız birim testleri",
@@ -73,12 +74,13 @@ format-python = { cmd = "ruff format src tests tools", help = "Python kaynaklar�
 format-markdown = { cmd = "mdformat README.md docs infra/README.md", help = "Kaynak Markdown dosyalarını yerelde formatla" }
 format-check = { cmd = "ruff format --check src tests tools", help = "Python formatını dosya değiştirmeden kontrol et" }
 markdown-check = { cmd = "mdformat --check README.md docs infra/README.md", help = "Kaynak Markdown formatını dosya değiştirmeden kontrol et" }
-yaml-check = { cmd = "yamllint -c .yamllint.yaml configs infra/compose.yaml .pre-commit-config.yaml", help = "YAML dosyalarını kontrol et" }
+yaml-check = { cmd = "yamllint -c .yamllint.yaml configs infra/compose.yaml .pre-commit-config.yaml .github", help = "YAML dosyalarını kontrol et" }
 typecheck = { cmd = "mypy src", help = "Python tip kontrolünü çalıştır" }
 test = { cmd = "pytest -q -m 'not colab and not integration'", help = "Hızlı lokal testleri; Colab ve entegrasyon testleri olmadan çalıştır" }
 integration-test = { cmd = "pytest -q -m 'not colab and integration'", help = "Yalnız lokal entegrasyon testlerini çalıştır" }
 test-all-local = { cmd = "pytest -q -m 'not colab'", help = "Bütün lokal test gruplarını çalıştır" }
 api-smoke = { cmd = "python tools/api_smoke.py", help = "API sözleşmesinin temel smoke kontrolünü çalıştır" }
+colab-evidence = { cmd = "python tools/check_colab_evidence.py", help = "Model değişikliklerinde Colab kanıt manifestini doğrula" }
 compose-config = { cmd = "docker compose -f infra/compose.yaml config --quiet", help = "Compose tanımını doğrula" }
 compose-up = { cmd = "docker compose -f infra/compose.yaml up --build", help = "Lokal API stack'ini oluştur ve başlat" }
 install-hooks = { cmd = "pre-commit install", env = { PRE_COMMIT_HOME = ".pre-commit-cache" }, help = "Git pre-commit hook'unu kur" }

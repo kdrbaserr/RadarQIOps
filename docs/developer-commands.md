@@ -15,6 +15,7 @@ Tüm yerel geliştirme ve daha sonra eklenecek CI işleri aynı Poe görevlerini
 | Entegrasyon | `uv run poe integration-test` | Yalnız lokal API/artifact/pipeline entegrasyon testlerini çalıştırır |
 | Bütün lokal testler | `uv run poe test-all-local` | `colab` marker'ı dışındaki bütün testleri çalıştırır |
 | API smoke | `uv run poe api-smoke` | Model yokken health/readiness davranışını doğrular |
+| Colab kanıtı | `uv run poe colab-evidence` | Son commit model hassas dosyaları değiştirdiyse eşleşen Colab manifestini doğrular |
 | Compose doğrulama | `uv run poe compose-config` | Compose dosyasını parse edip doğrular |
 | Stack başlatma | `uv run poe compose-up` | Lokal API container'ını build edip başlatır |
 | Hızlı kontrol | `uv run poe check` | Lint, typecheck, test, integration ve smoke görevlerini sırayla çağırır |
