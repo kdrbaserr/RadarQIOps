@@ -50,3 +50,12 @@ repos:
           - --baseline
           - .secrets.baseline
         exclude: ^(?:uv\.lock|output/|tmp/)
+
+      - id: commit-message
+        name: conventional commit message
+        entry: python tools/check_commit_message.py
+        language: system
+        stages:
+          - commit-msg
+        always_run: true
+        pass_filenames: true

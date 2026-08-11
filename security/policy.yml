@@ -1,0 +1,23 @@
+version: 1
+
+vulnerabilities:
+  fail_on: all-known
+
+licenses:
+  scope: runtime-and-serve
+  allowed:
+    - Apache-2.0
+    - Apache-2.0 OR BSD-2-Clause
+    - Apache Software License
+    - BSD-2-Clause
+    - BSD-3-Clause
+    - BSD License
+    - ISC
+    - ISC License (ISCL)
+    - MIT
+    - MIT License
+    - Mozilla Public License 2.0 (MPL 2.0)
+    - MPL-2.0
+    - PSF-2.0
+    - Python Software Foundation License
+    - Unlicense

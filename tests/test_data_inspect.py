@@ -10,9 +10,12 @@ from pathlib import Path
 
 import h5py
 import numpy as np
+import pytest
 
 from radariq.cli import main
 from radariq.data_inspect import InspectError, inspect_dataset
+
+pytestmark = [pytest.mark.contract, pytest.mark.unit]
 
 
 class DataInspectTests(unittest.TestCase):

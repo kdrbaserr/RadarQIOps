@@ -1,0 +1,69 @@
+name: PR Security
+
+"on":
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - ready_for_review
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pr-security-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  repository-security:
+    name: pr-security-policy
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Install uv and Python
+        uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9  # v9.0.0
+        with:
+          version: "0.11.14"
+          python-version: "3.11.15"
+          enable-cache: true
+          cache-dependency-glob: uv.lock
+
+      - name: Install locked security tools
+        run: uv sync --locked --only-group dev
+
+      - name: Scan tracked files and validate exceptions
+        run: |
+          uv run --no-sync poe security-secrets
+          uv run --no-sync poe security-policy
+
+  dependency-security:
+    name: pr-dependency-security
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Install uv and Python
+        uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9  # v9.0.0
+        with:
+          version: "0.11.14"
+          python-version: "3.11.15"
+          enable-cache: true
+          cache-dependency-glob: uv.lock
+
+      - name: Install locked dependency audit tools
+        run: uv sync --locked --all-extras
+
+      - name: Audit vulnerabilities and runtime licenses
+        run: uv run --no-sync poe security-dependencies

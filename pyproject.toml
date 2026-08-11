@@ -24,9 +24,11 @@ dev = [
   "httpx>=0.28,<1",
   "mdformat>=0.7,<1",
   "mypy>=1.18,<2",
+  "pip-audit>=2.10.1,<3",
+  "pip-licenses>=5.5.5,<6",
   "poethepoet>=0.37,<1",
   "pre-commit>=4,<5",
-  "pytest>=8.4,<9",
+  "pytest>=9.0.3,<10",
   "ruff>=0.12,<1",
   "yamllint>=1.37,<2",
 ]
@@ -39,6 +41,25 @@ where = ["src"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+pythonpath = ["."]
+addopts = ["--strict-config", "--strict-markers"]
+markers = [
+  "unit: hızlı ve dış kaynaksız birim testleri",
+  "contract: veri, API veya artifact şeması sözleşme testleri",
+  "integration: birden fazla lokal bileşeni birleştiren testler",
+  "api: lokal inference API testleri",
+  "artifact: model artifact kaydetme ve yükleme testleri",
+  "smoke: temel çalışma davranışını doğrulayan hızlı testler",
+  "colab: yalnız Colab GPU ortamında çalıştırılan model testleri",
+  "model_feature: Colab model giriş ve çıkış özellik testleri",
+  "gradient: Colab forward/backward ve gradient testleri",
+  "overfit: Colab küçük veri üzerinde overfit smoke testleri",
+  "reproducibility: Colab deterministik tekrar üretilebilirlik testleri",
+  "evaluation: Colab model değerlendirme ve metrik testleri",
+]
+filterwarnings = [
+  "ignore:Using `httpx` with `starlette.testclient` is deprecated:starlette.exceptions.StarletteDeprecationWarning",
+]
 
 [tool.mypy]
 python_version = "3.11"
@@ -52,17 +73,23 @@ setup = { cmd = "uv sync --locked --all-extras", help = "Kilitli yerel geliştir
 lint = { cmd = "ruff check src tests tools", help = "Python lint ve import sırası kontrolünü çalıştır" }
 lint-fix = { cmd = "ruff check --fix src tests tools", help = "Güvenli Ruff düzeltmelerini yerelde uygula" }
 format-python = { cmd = "ruff format src tests tools", help = "Python kaynaklarını yerelde formatla" }
-format-markdown = { cmd = "mdformat README.md docs", help = "README ve docs Markdown dosyalarını yerelde formatla" }
+format-markdown = { cmd = "mdformat README.md CHANGELOG.md .github/pull_request_template.md docs infra/README.md", help = "Kaynak Markdown dosyalarını yerelde formatla" }
 format-check = { cmd = "ruff format --check src tests tools", help = "Python formatını dosya değiştirmeden kontrol et" }
-markdown-check = { cmd = "mdformat --check README.md docs", help = "Markdown formatını dosya değiştirmeden kontrol et" }
-yaml-check = { cmd = "yamllint -c .yamllint.yaml configs infra/compose.yaml .pre-commit-config.yaml", help = "YAML dosyalarını kontrol et" }
+markdown-check = { cmd = "mdformat --check README.md CHANGELOG.md .github/pull_request_template.md docs infra/README.md", help = "Kaynak Markdown formatını dosya değiştirmeden kontrol et" }
+yaml-check = { cmd = "yamllint -c .yamllint.yaml configs infra/compose.yaml .pre-commit-config.yaml .github", help = "YAML dosyalarını kontrol et" }
 typecheck = { cmd = "mypy src", help = "Python tip kontrolünü çalıştır" }
-test = { cmd = "pytest -q", help = "Lokal testleri çalıştır" }
-integration-test = { cmd = "pytest -q tests/test_pipeline.py", help = "Lokal pipeline entegrasyon testini çalıştır" }
+test = { cmd = "pytest -q -m 'not colab and not integration'", help = "Hızlı lokal testleri; Colab ve entegrasyon testleri olmadan çalıştır" }
+integration-test = { cmd = "pytest -q -m 'not colab and integration'", help = "Yalnız lokal entegrasyon testlerini çalıştır" }
+test-all-local = { cmd = "pytest -q -m 'not colab'", help = "Bütün lokal test gruplarını çalıştır" }
 api-smoke = { cmd = "python tools/api_smoke.py", help = "API sözleşmesinin temel smoke kontrolünü çalıştır" }
+colab-evidence = { cmd = "python tools/check_colab_evidence.py", help = "Model değişikliklerinde Colab kanıt manifestini doğrula" }
+security-secrets = { cmd = "python tools/check_tracked_secrets.py", help = "Takip edilen bütün dosyalarda secret tara" }
+security-policy = { cmd = "python tools/check_security_policy.py", help = "Lisans, zafiyet eşiği ve süreli istisnaları doğrula" }
+security-dependencies = { cmd = "python tools/audit_dependencies.py", help = "Lock zafiyetlerini ve runtime lisanslarını denetle" }
+pr-policy = { cmd = "python tools/check_pr_policy.py", help = "Son commit ve repository politika istisnalarını doğrula" }
 compose-config = { cmd = "docker compose -f infra/compose.yaml config --quiet", help = "Compose tanımını doğrula" }
 compose-up = { cmd = "docker compose -f infra/compose.yaml up --build", help = "Lokal API stack'ini oluştur ve başlat" }
-install-hooks = { cmd = "pre-commit install", env = { PRE_COMMIT_HOME = ".pre-commit-cache" }, help = "Git pre-commit hook'unu kur" }
+install-hooks = { cmd = "pre-commit install --hook-type pre-commit --hook-type commit-msg", env = { PRE_COMMIT_HOME = ".pre-commit-cache" }, help = "Git pre-commit ve commit-msg hook'larını kur" }
 precommit = { cmd = "pre-commit run --all-files", env = { PRE_COMMIT_HOME = ".pre-commit-cache" }, help = "Tüm pre-commit kontrollerini çalıştır" }
 
 [tool.poe.tasks.format]
@@ -72,6 +99,10 @@ sequence = ["lint-fix", "format-python", "format-markdown"]
 [tool.poe.tasks.check]
 help = "Hızlı lokal kalite komutlarını sırayla çalıştır"
 sequence = ["lint", "format-check", "markdown-check", "yaml-check", "typecheck", "test", "integration-test", "api-smoke"]
+
+[tool.poe.tasks.security]
+help = "Yerel secret ve güvenlik politikası kontrollerini çalıştır"
+sequence = ["security-secrets", "security-policy", "security-dependencies"]
 
 [tool.ruff]
 target-version = "py311"

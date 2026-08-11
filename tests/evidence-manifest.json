@@ -1,0 +1,28 @@
+{
+  "schema_version": "1.0",
+  "default_seed": 20260811,
+  "local_command": "uv run poe test-all-local",
+  "local_excluded_marker": "colab",
+  "local_groups": [
+    "unit",
+    "contract",
+    "integration",
+    "api",
+    "artifact",
+    "smoke"
+  ],
+  "colab_groups": [
+    "model_feature",
+    "gradient",
+    "overfit",
+    "reproducibility",
+    "evaluation"
+  ],
+  "required_evidence": [
+    "seed",
+    "dataset_sha256",
+    "split_indices_sha256",
+    "runtime_manifest",
+    "test_report"
+  ]
+}
