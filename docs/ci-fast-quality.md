@@ -14,7 +14,7 @@ Notebook ve büyük artifact'lar Git'e eklenmez; yalnız hash ve test/export man
 
 ## Merge kapıları
 
-014 politika aşamasında branch protection'a aşağıdaki required check adları aynen yazılmalıdır:
+Branch protection'a yazılacak bütün required check adları `docs/repository-policy.md` içinde tanımlıdır. Bu workflow'un sağladığı adlar:
 
 - `pr-fast-quality`
 - `pr-colab-evidence`

@@ -73,9 +73,9 @@ setup = { cmd = "uv sync --locked --all-extras", help = "Kilitli yerel geliştir
 lint = { cmd = "ruff check src tests tools", help = "Python lint ve import sırası kontrolünü çalıştır" }
 lint-fix = { cmd = "ruff check --fix src tests tools", help = "Güvenli Ruff düzeltmelerini yerelde uygula" }
 format-python = { cmd = "ruff format src tests tools", help = "Python kaynaklarını yerelde formatla" }
-format-markdown = { cmd = "mdformat README.md docs infra/README.md", help = "Kaynak Markdown dosyalarını yerelde formatla" }
+format-markdown = { cmd = "mdformat README.md CHANGELOG.md .github/pull_request_template.md docs infra/README.md", help = "Kaynak Markdown dosyalarını yerelde formatla" }
 format-check = { cmd = "ruff format --check src tests tools", help = "Python formatını dosya değiştirmeden kontrol et" }
-markdown-check = { cmd = "mdformat --check README.md docs infra/README.md", help = "Kaynak Markdown formatını dosya değiştirmeden kontrol et" }
+markdown-check = { cmd = "mdformat --check README.md CHANGELOG.md .github/pull_request_template.md docs infra/README.md", help = "Kaynak Markdown formatını dosya değiştirmeden kontrol et" }
 yaml-check = { cmd = "yamllint -c .yamllint.yaml configs infra/compose.yaml .pre-commit-config.yaml .github", help = "YAML dosyalarını kontrol et" }
 typecheck = { cmd = "mypy src", help = "Python tip kontrolünü çalıştır" }
 test = { cmd = "pytest -q -m 'not colab and not integration'", help = "Hızlı lokal testleri; Colab ve entegrasyon testleri olmadan çalıştır" }
@@ -86,9 +86,10 @@ colab-evidence = { cmd = "python tools/check_colab_evidence.py", help = "Model d
 security-secrets = { cmd = "python tools/check_tracked_secrets.py", help = "Takip edilen bütün dosyalarda secret tara" }
 security-policy = { cmd = "python tools/check_security_policy.py", help = "Lisans, zafiyet eşiği ve süreli istisnaları doğrula" }
 security-dependencies = { cmd = "python tools/audit_dependencies.py", help = "Lock zafiyetlerini ve runtime lisanslarını denetle" }
+pr-policy = { cmd = "python tools/check_pr_policy.py", help = "Son commit ve repository politika istisnalarını doğrula" }
 compose-config = { cmd = "docker compose -f infra/compose.yaml config --quiet", help = "Compose tanımını doğrula" }
 compose-up = { cmd = "docker compose -f infra/compose.yaml up --build", help = "Lokal API stack'ini oluştur ve başlat" }
-install-hooks = { cmd = "pre-commit install", env = { PRE_COMMIT_HOME = ".pre-commit-cache" }, help = "Git pre-commit hook'unu kur" }
+install-hooks = { cmd = "pre-commit install --hook-type pre-commit --hook-type commit-msg", env = { PRE_COMMIT_HOME = ".pre-commit-cache" }, help = "Git pre-commit ve commit-msg hook'larını kur" }
 precommit = { cmd = "pre-commit run --all-files", env = { PRE_COMMIT_HOME = ".pre-commit-cache" }, help = "Tüm pre-commit kontrollerini çalıştır" }
 
 [tool.poe.tasks.format]

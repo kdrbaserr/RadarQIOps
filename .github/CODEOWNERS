@@ -1,0 +1,11 @@
+# Repository-wide default owner
+* @kdrbaserr
+
+# Critical delivery and model boundaries
+/.github/ @kdrbaserr
+/configs/ @kdrbaserr
+/infra/ @kdrbaserr
+/security/ @kdrbaserr
+/src/radariq/models/ @kdrbaserr
+/src/radariq/training/ @kdrbaserr
+/src/radariq/evaluation/ @kdrbaserr
