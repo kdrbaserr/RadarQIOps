@@ -46,6 +46,24 @@ def test_checked_controls_are_extracted() -> None:
     assert checked_controls(body) == CHECKLIST_CONTROLS
 
 
+def test_visible_checklist_text_is_accepted_without_html_markers() -> None:
+    body = """\
+- [x] PR tek bir anlaşılır amacı kapsıyor; WIP/fixup işi kalmadı.
+- [x] İlgili yerel testler ve kalite kontrolleri çalıştırıldı.
+- [x] Secret, bağımlılık ve lisans etkileri kontrol edildi.
+- [x] Colab/model etkisi yok veya gerekli kanıt manifesti hazır.
+- [x] Dokümantasyon güncellendi veya değişiklik gerektirmediği doğrulandı.
+"""
+
+    assert checked_controls(body) == CHECKLIST_CONTROLS
+
+
+def test_unchecked_visible_items_are_not_accepted() -> None:
+    body = "- [ ] PR tek bir anlaşılır amacı kapsıyor; WIP/fixup işi kalmadı."
+
+    assert checked_controls(body) == set()
+
+
 def test_expired_policy_exception_is_rejected() -> None:
     document = {
         "version": 1,

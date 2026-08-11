@@ -31,10 +31,15 @@ COMMIT_PATTERN = re.compile(
 )
 BLOCKED_PREFIXES = ("fixup!", "squash!", "wip", "WIP")
 CHECKLIST_CONTROLS = {"scope", "tests", "security", "colab", "docs"}
-CHECKED_ITEM_PATTERN = re.compile(
-    r"^- \[[xX]\]\s+<!--\s*policy:(scope|tests|security|colab|docs)\s*-->",
-    re.MULTILINE,
-)
+CHECKLIST_TEXT = {
+    "scope": "PR tek bir anlaşılır amacı kapsıyor",
+    "tests": "İlgili yerel testler ve kalite kontrolleri çalıştırıldı",
+    "security": "Secret, bağımlılık ve lisans etkileri kontrol edildi",
+    "colab": "Colab/model etkisi yok veya gerekli kanıt manifesti hazır",
+    "docs": "Dokümantasyon güncellendi veya değişiklik gerektirmediği doğrulandı",
+}
+CHECKED_ITEM_PATTERN = re.compile(r"^\s*[-*+]\s+\[[xX]\]\s+(.+)$", re.MULTILINE)
+POLICY_MARKER_PATTERN = re.compile(r"<!--\s*policy:(scope|tests|security|colab|docs)\s*-->")
 
 
 def _git(*args: str) -> str:
@@ -80,7 +85,17 @@ def _file_exists_at(commit: str, path: str) -> bool:
 
 
 def checked_controls(body: str) -> set[str]:
-    return set(CHECKED_ITEM_PATTERN.findall(body))
+    controls: set[str] = set()
+    for item in CHECKED_ITEM_PATTERN.findall(body):
+        marker = POLICY_MARKER_PATTERN.search(item)
+        if marker:
+            controls.add(marker.group(1))
+            continue
+        normalized = item.casefold()
+        controls.update(
+            control for control, text in CHECKLIST_TEXT.items() if text.casefold() in normalized
+        )
+    return controls
 
 
 def validate_exception_document(document: dict[str, Any], *, today: date) -> list[str]:
