@@ -90,6 +90,13 @@ def allowed_license_names(policy: dict[str, Any]) -> set[str]:
     return {str(item) for item in licenses["allowed"]}
 
 
+def declared_licenses(value: Any) -> set[str]:
+    if not isinstance(value, str):
+        return {"UNKNOWN"}
+    licenses = {item.strip() for item in value.split(";") if item.strip()}
+    return licenses or {"UNKNOWN"}
+
+
 def license_exception_packages(exceptions: dict[str, Any]) -> set[str]:
     items = exceptions.get("exceptions", [])
     if not isinstance(items, list):
@@ -130,8 +137,11 @@ def audit_runtime_licenses(
             continue
         installed_runtime.add(name)
         license_name = str(row.get("License", "UNKNOWN"))
-        if license_name not in allowed and name not in excepted:
-            violations.append(f"{name}: izin verilmeyen lisans '{license_name}'")
+        unapproved = declared_licenses(license_name) - allowed
+        if unapproved and name not in excepted:
+            violations.append(
+                f"{name}: izin verilmeyen lisans(lar) '{'; '.join(sorted(unapproved))}'"
+            )
 
     missing = sorted(runtime_names - installed_runtime)
     violations.extend(f"{name}: lisans bilgisi bulunamadı" for name in missing)
