@@ -39,6 +39,24 @@ where = ["src"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+addopts = ["--strict-config", "--strict-markers"]
+markers = [
+  "unit: hızlı ve dış kaynaksız birim testleri",
+  "contract: veri, API veya artifact şeması sözleşme testleri",
+  "integration: birden fazla lokal bileşeni birleştiren testler",
+  "api: lokal inference API testleri",
+  "artifact: model artifact kaydetme ve yükleme testleri",
+  "smoke: temel çalışma davranışını doğrulayan hızlı testler",
+  "colab: yalnız Colab GPU ortamında çalıştırılan model testleri",
+  "model_feature: Colab model giriş ve çıkış özellik testleri",
+  "gradient: Colab forward/backward ve gradient testleri",
+  "overfit: Colab küçük veri üzerinde overfit smoke testleri",
+  "reproducibility: Colab deterministik tekrar üretilebilirlik testleri",
+  "evaluation: Colab model değerlendirme ve metrik testleri",
+]
+filterwarnings = [
+  "ignore:Using `httpx` with `starlette.testclient` is deprecated:starlette.exceptions.StarletteDeprecationWarning",
+]
 
 [tool.mypy]
 python_version = "3.11"
@@ -52,13 +70,14 @@ setup = { cmd = "uv sync --locked --all-extras", help = "Kilitli yerel geliştir
 lint = { cmd = "ruff check src tests tools", help = "Python lint ve import sırası kontrolünü çalıştır" }
 lint-fix = { cmd = "ruff check --fix src tests tools", help = "Güvenli Ruff düzeltmelerini yerelde uygula" }
 format-python = { cmd = "ruff format src tests tools", help = "Python kaynaklarını yerelde formatla" }
-format-markdown = { cmd = "mdformat README.md docs", help = "README ve docs Markdown dosyalarını yerelde formatla" }
+format-markdown = { cmd = "mdformat README.md docs infra/README.md", help = "Kaynak Markdown dosyalarını yerelde formatla" }
 format-check = { cmd = "ruff format --check src tests tools", help = "Python formatını dosya değiştirmeden kontrol et" }
-markdown-check = { cmd = "mdformat --check README.md docs", help = "Markdown formatını dosya değiştirmeden kontrol et" }
+markdown-check = { cmd = "mdformat --check README.md docs infra/README.md", help = "Kaynak Markdown formatını dosya değiştirmeden kontrol et" }
 yaml-check = { cmd = "yamllint -c .yamllint.yaml configs infra/compose.yaml .pre-commit-config.yaml", help = "YAML dosyalarını kontrol et" }
 typecheck = { cmd = "mypy src", help = "Python tip kontrolünü çalıştır" }
-test = { cmd = "pytest -q", help = "Lokal testleri çalıştır" }
-integration-test = { cmd = "pytest -q tests/test_pipeline.py", help = "Lokal pipeline entegrasyon testini çalıştır" }
+test = { cmd = "pytest -q -m 'not colab and not integration'", help = "Hızlı lokal testleri; Colab ve entegrasyon testleri olmadan çalıştır" }
+integration-test = { cmd = "pytest -q -m 'not colab and integration'", help = "Yalnız lokal entegrasyon testlerini çalıştır" }
+test-all-local = { cmd = "pytest -q -m 'not colab'", help = "Bütün lokal test gruplarını çalıştır" }
 api-smoke = { cmd = "python tools/api_smoke.py", help = "API sözleşmesinin temel smoke kontrolünü çalıştır" }
 compose-config = { cmd = "docker compose -f infra/compose.yaml config --quiet", help = "Compose tanımını doğrula" }
 compose-up = { cmd = "docker compose -f infra/compose.yaml up --build", help = "Lokal API stack'ini oluştur ve başlat" }

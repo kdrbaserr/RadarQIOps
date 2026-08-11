@@ -6,9 +6,12 @@ import unittest
 from pathlib import Path
 
 import numpy as np
+import pytest
 
 from radariq.evaluation.pipeline import evaluate_from_config
 from radariq.training.pipeline import train_from_config
+
+pytestmark = [pytest.mark.integration, pytest.mark.artifact]
 
 
 class PipelineTests(unittest.TestCase):

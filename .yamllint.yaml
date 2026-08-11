@@ -5,6 +5,8 @@ rules:
   line-length:
     max: 120
     level: error
+  new-lines:
+    type: platform
   truthy:
     allowed-values:
       - "true"

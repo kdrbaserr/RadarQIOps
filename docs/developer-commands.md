@@ -11,8 +11,9 @@ Tüm yerel geliştirme ve daha sonra eklenecek CI işleri aynı Poe görevlerini
 | Markdown | `uv run poe markdown-check` | README ve docs Markdown formatını kontrol eder |
 | YAML | `uv run poe yaml-check` | Config, Compose ve pre-commit YAML dosyalarını kontrol eder |
 | Tip kontrolü | `uv run poe typecheck` | `src/` üzerinde mypy çalıştırır |
-| Lokal test | `uv run poe test` | Hızlı lokal testleri çalıştırır |
-| Entegrasyon | `uv run poe integration-test` | Lokal pipeline round-trip testini çalıştırır |
+| Lokal test | `uv run poe test` | Colab ve entegrasyon marker'larını toplamadan hızlı lokal testleri çalıştırır |
+| Entegrasyon | `uv run poe integration-test` | Yalnız lokal API/artifact/pipeline entegrasyon testlerini çalıştırır |
+| Bütün lokal testler | `uv run poe test-all-local` | `colab` marker'ı dışındaki bütün testleri çalıştırır |
 | API smoke | `uv run poe api-smoke` | Model yokken health/readiness davranışını doğrular |
 | Compose doğrulama | `uv run poe compose-config` | Compose dosyasını parse edip doğrular |
 | Stack başlatma | `uv run poe compose-up` | Lokal API container'ını build edip başlatır |
