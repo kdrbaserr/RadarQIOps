@@ -16,6 +16,10 @@ Tüm yerel geliştirme ve daha sonra eklenecek CI işleri aynı Poe görevlerini
 | Bütün lokal testler | `uv run poe test-all-local` | `colab` marker'ı dışındaki bütün testleri çalıştırır |
 | API smoke | `uv run poe api-smoke` | Model yokken health/readiness davranışını doğrular |
 | Colab kanıtı | `uv run poe colab-evidence` | Son commit model hassas dosyaları değiştirdiyse eşleşen Colab manifestini doğrular |
+| Secret taraması | `uv run poe security-secrets` | Git tarafından takip edilen bütün dosyalarda yeni secret arar |
+| Güvenlik politikası | `uv run poe security-policy` | Lisans, zafiyet eşiği ve süreli istisna kayıtlarını doğrular |
+| Bağımlılık güvenliği | `uv run poe security-dependencies` | Lock zafiyetlerini ve dağıtılan bağımlılık lisanslarını denetler |
+| Bütün güvenlik kontrolleri | `uv run poe security` | Secret, politika, zafiyet ve lisans kontrollerini birlikte çalıştırır |
 | Compose doğrulama | `uv run poe compose-config` | Compose dosyasını parse edip doğrular |
 | Stack başlatma | `uv run poe compose-up` | Lokal API container'ını build edip başlatır |
 | Hızlı kontrol | `uv run poe check` | Lint, typecheck, test, integration ve smoke görevlerini sırayla çağırır |
