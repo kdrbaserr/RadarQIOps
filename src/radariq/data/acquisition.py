@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import math
 import os
 import tarfile
@@ -22,6 +23,7 @@ from urllib.request import Request, urlopen
 from radariq.configs import load_config
 
 DEFAULT_CHUNK_SIZE_BYTES = 1024 * 1024
+SHA256_HEX_LENGTH = 64
 
 
 class SourceType(StrEnum):
@@ -47,6 +49,10 @@ class AcquisitionConfigError(AcquisitionError):
     """Raised before transfer when acquisition configuration is invalid."""
 
 
+class ChecksumMismatchError(AcquisitionError):
+    """Raised before publication when content differs from its expected SHA-256."""
+
+
 class _ReadableStream(Protocol):
     def read(self, size: int = -1) -> bytes: ...
 
@@ -66,6 +72,7 @@ class AcquisitionConfig:
     source_type: SourceType
     location: str
     destination: Path
+    expected_sha256: str | None = None
     max_attempts: int = 3
     timeout_seconds: float = 30.0
     retry_delay_seconds: float = 0.25
@@ -110,6 +117,7 @@ class AcquisitionConfig:
         chunk_size_bytes = _positive_int(
             value.get("chunk_size_bytes", DEFAULT_CHUNK_SIZE_BYTES), "chunk_size_bytes"
         )
+        expected_sha256 = _optional_sha256(value.get("expected_sha256"))
 
         resolved_location = location.strip()
         if source_type is not SourceType.HTTP:
@@ -119,6 +127,7 @@ class AcquisitionConfig:
             source_type=source_type,
             location=resolved_location,
             destination=_resolve_config_path(base_directory, destination_value.strip()),
+            expected_sha256=expected_sha256,
             max_attempts=max_attempts,
             timeout_seconds=timeout_seconds,
             retry_delay_seconds=retry_delay_seconds,
@@ -134,6 +143,7 @@ class AcquisitionResult:
     source_type: SourceType
     destination: Path
     size_bytes: int
+    sha256: str
     attempts: int
 
     def as_dict(self) -> dict[str, str | int]:
@@ -142,6 +152,7 @@ class AcquisitionResult:
             "source_type": self.source_type.value,
             "destination": str(self.destination),
             "size_bytes": self.size_bytes,
+            "sha256": self.sha256,
             "attempts": self.attempts,
         }
 
@@ -216,20 +227,29 @@ def acquire(config: AcquisitionConfig) -> AcquisitionResult:
     if destination.exists():
         if not destination.is_file():
             raise AcquisitionConfigError(f"destination bir dosya olmalıdır: {destination}")
-        return _result(config, AcquisitionStatus.REUSED, destination, attempts=0)
+        digest = sha256_file(destination, chunk_size_bytes=config.chunk_size_bytes)
+        _require_checksum_match(config.expected_sha256, digest)
+        return _result(config, AcquisitionStatus.REUSED, destination, digest, attempts=0)
 
     destination.parent.mkdir(parents=True, exist_ok=True)
     last_error: Exception | None = None
 
     for attempt in range(1, config.max_attempts + 1):
         try:
-            _transfer_once(
+            digest = _transfer_once(
                 adapter,
                 destination,
+                expected_sha256=config.expected_sha256,
                 timeout_seconds=config.timeout_seconds,
                 chunk_size_bytes=config.chunk_size_bytes,
             )
-            return _result(config, AcquisitionStatus.ACQUIRED, destination, attempts=attempt)
+            return _result(
+                config,
+                AcquisitionStatus.ACQUIRED,
+                destination,
+                digest,
+                attempts=attempt,
+            )
         except AcquisitionConfigError:
             raise
         except (HTTPException, OSError) as exc:
@@ -246,9 +266,10 @@ def _transfer_once(
     adapter: AcquisitionAdapter,
     destination: Path,
     *,
+    expected_sha256: str | None,
     timeout_seconds: float,
     chunk_size_bytes: int,
-) -> None:
+) -> str:
     file_descriptor, temporary_name = tempfile.mkstemp(
         dir=destination.parent,
         prefix=f".{destination.name}.",
@@ -258,28 +279,46 @@ def _transfer_once(
     try:
         with os.fdopen(file_descriptor, "wb") as output:
             with adapter.open(timeout_seconds) as opened:
-                copied_bytes = _copy_stream(opened.stream, output, chunk_size_bytes)
+                copied_bytes, digest = _copy_stream(opened.stream, output, chunk_size_bytes)
                 if opened.expected_size is not None and copied_bytes != opened.expected_size:
                     raise OSError(
                         "kaynak tamamlanmadan kapandı: "
                         f"beklenen={opened.expected_size}, alınan={copied_bytes}"
                     )
+                _require_checksum_match(expected_sha256, digest)
             output.flush()
             os.fsync(output.fileno())
 
         if destination.exists():
-            return
+            existing_digest = sha256_file(destination, chunk_size_bytes=chunk_size_bytes)
+            _require_checksum_match(expected_sha256, existing_digest)
+            return existing_digest
         os.replace(temporary_path, destination)
+        return digest
     finally:
         temporary_path.unlink(missing_ok=True)
 
 
-def _copy_stream(source: _ReadableStream, output: BinaryIO, chunk_size_bytes: int) -> int:
+def _copy_stream(
+    source: _ReadableStream, output: BinaryIO, chunk_size_bytes: int
+) -> tuple[int, str]:
     copied_bytes = 0
+    digest = hashlib.sha256()
     while chunk := source.read(chunk_size_bytes):
         output.write(chunk)
+        digest.update(chunk)
         copied_bytes += len(chunk)
-    return copied_bytes
+    return copied_bytes, digest.hexdigest()
+
+
+def sha256_file(path: Path, *, chunk_size_bytes: int = DEFAULT_CHUNK_SIZE_BYTES) -> str:
+    """Calculate a file SHA-256 without loading the whole file into memory."""
+
+    digest = hashlib.sha256()
+    with path.open("rb") as stream:
+        while chunk := stream.read(chunk_size_bytes):
+            digest.update(chunk)
+    return digest.hexdigest()
 
 
 def _adapter_for(config: AcquisitionConfig) -> AcquisitionAdapter:
@@ -299,6 +338,7 @@ def _result(
     config: AcquisitionConfig,
     status: AcquisitionStatus,
     destination: Path,
+    digest: str,
     *,
     attempts: int,
 ) -> AcquisitionResult:
@@ -307,6 +347,7 @@ def _result(
         source_type=config.source_type,
         destination=destination,
         size_bytes=destination.stat().st_size,
+        sha256=digest,
         attempts=attempts,
     )
 
@@ -360,3 +401,23 @@ def _non_negative_float(value: Any, field: str) -> float:
     ):
         raise AcquisitionConfigError(f"{field} sıfır veya pozitif sayı olmalıdır")
     return float(value)
+
+
+def _optional_sha256(value: Any) -> str | None:
+    if value is None:
+        return None
+    if not isinstance(value, str):
+        raise AcquisitionConfigError("expected_sha256 64 karakterli hexadecimal string olmalıdır")
+    normalized = value.strip().lower()
+    if len(normalized) != SHA256_HEX_LENGTH or any(
+        character not in "0123456789abcdef" for character in normalized
+    ):
+        raise AcquisitionConfigError("expected_sha256 64 karakterli hexadecimal string olmalıdır")
+    return normalized
+
+
+def _require_checksum_match(expected: str | None, actual: str) -> None:
+    if expected is not None and actual != expected:
+        raise ChecksumMismatchError(
+            f"SHA-256 uyuşmazlığı: beklenen={expected}, hesaplanan={actual}"
+        )

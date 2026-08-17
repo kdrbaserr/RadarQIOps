@@ -167,6 +167,18 @@ def test_invalid_numeric_config_is_rejected(field: str, value: object, tmp_path:
         AcquisitionConfig.from_mapping(config, base_directory=tmp_path)
 
 
+@pytest.mark.parametrize("value", ["abc", "g" * 64, 123])
+def test_invalid_expected_sha256_is_rejected(value: object, tmp_path: Path) -> None:
+    config = {
+        "source": {"type": "local_file", "location": "source.bin"},
+        "destination": "raw/source.bin",
+        "expected_sha256": value,
+    }
+
+    with pytest.raises(AcquisitionConfigError, match="expected_sha256"):
+        AcquisitionConfig.from_mapping(config, base_directory=tmp_path)
+
+
 def test_local_source_and_destination_cannot_be_the_same_file(tmp_path: Path) -> None:
     source = tmp_path / "fixture.bin"
     source.write_bytes(b"keep-me")

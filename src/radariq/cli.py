@@ -7,6 +7,7 @@ from collections.abc import Sequence
 from pathlib import Path
 
 from radariq.data.acquisition import AcquisitionError, acquire_from_config
+from radariq.data.manifests import register_source_from_config
 from radariq.data_inspect import DATASET_CHOICES, InspectError, inspect_dataset
 from radariq.evaluation.pipeline import evaluate_from_config
 from radariq.training.pipeline import train_from_config
@@ -28,6 +29,17 @@ def _build_parser() -> argparse.ArgumentParser:
         required=True,
         type=Path,
         help="Acquisition kaynak ve hedef ayarlarını içeren JSON uyumlu YAML",
+    )
+
+    register_parser = data_commands.add_parser(
+        "register",
+        help="Kaynağı checksum, lisans, atıf ve sürümlü data manifest ile kaydet",
+    )
+    register_parser.add_argument(
+        "--config",
+        required=True,
+        type=Path,
+        help="Acquisition ve zorunlu manifest metadata ayarlarını içeren config",
     )
 
     inspect_parser = data_commands.add_parser(
@@ -96,6 +108,15 @@ def main(argv: Sequence[str] | None = None) -> int:
             print(
                 json.dumps(
                     acquire_from_config(args.config).as_dict(),
+                    ensure_ascii=False,
+                    indent=2,
+                )
+            )
+            return 0
+        if args.data_command == "register":
+            print(
+                json.dumps(
+                    register_source_from_config(args.config).as_dict(),
                     ensure_ascii=False,
                     indent=2,
                 )
