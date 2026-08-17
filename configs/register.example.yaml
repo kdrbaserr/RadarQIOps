@@ -1,0 +1,21 @@
+{
+  "source": {
+    "type": "archive",
+    "location": "../incoming/example-dataset.zip"
+  },
+  "destination": "../data/raw/example-dataset.zip",
+  "expected_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+  "max_attempts": 3,
+  "timeout_seconds": 30,
+  "retry_delay_seconds": 1,
+  "manifest": {
+    "path": "../data/manifests/example-dataset.json",
+    "source_id": "example-dataset",
+    "source_version": "replace-with-verified-version",
+    "source_reference": "https://example.org/dataset",
+    "license": {
+      "id": "LicenseRef-Replace-With-Verified-License",
+      "attribution": "Replace with the publisher-required attribution text"
+    }
+  }
+}

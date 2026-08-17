@@ -1,0 +1,11 @@
+{
+  "source": {
+    "type": "archive",
+    "location": "../incoming/dataset.zip"
+  },
+  "destination": "../data/raw/dataset.zip",
+  "max_attempts": 3,
+  "timeout_seconds": 30,
+  "retry_delay_seconds": 1,
+  "chunk_size_bytes": 1048576
+}
