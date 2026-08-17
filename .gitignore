@@ -10,5 +10,5 @@ dist/
 build/
 
 artifacts/
-data/
+/data/
 .ipynb_checkpoints/
