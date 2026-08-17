@@ -6,6 +6,7 @@ import sys
 from collections.abc import Sequence
 from pathlib import Path
 
+from radariq.data.acquisition import AcquisitionError, acquire_from_config
 from radariq.data_inspect import DATASET_CHOICES, InspectError, inspect_dataset
 from radariq.evaluation.pipeline import evaluate_from_config
 from radariq.training.pipeline import train_from_config
@@ -17,6 +18,17 @@ def _build_parser() -> argparse.ArgumentParser:
 
     data_parser = subcommands.add_parser("data", help="Veri seti işlemleri")
     data_commands = data_parser.add_subparsers(dest="data_command", required=True)
+
+    acquire_parser = data_commands.add_parser(
+        "acquire",
+        help="Config içindeki HTTP, yerel dosya veya arşiv kaynağını atomik olarak al",
+    )
+    acquire_parser.add_argument(
+        "--config",
+        required=True,
+        type=Path,
+        help="Acquisition kaynak ve hedef ayarlarını içeren JSON uyumlu YAML",
+    )
 
     inspect_parser = data_commands.add_parser(
         "inspect",
@@ -80,6 +92,15 @@ def main(argv: Sequence[str] | None = None) -> int:
         if args.command == "evaluate":
             print(json.dumps(evaluate_from_config(args.config), ensure_ascii=False, indent=2))
             return 0
+        if args.data_command == "acquire":
+            print(
+                json.dumps(
+                    acquire_from_config(args.config).as_dict(),
+                    ensure_ascii=False,
+                    indent=2,
+                )
+            )
+            return 0
 
         result = inspect_dataset(
             dataset=args.dataset,
@@ -101,7 +122,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         else:
             print(payload)
         return 0
-    except (InspectError, OSError, KeyError, ValueError) as exc:
+    except (AcquisitionError, InspectError, OSError, KeyError, ValueError) as exc:
         print(json.dumps({"error": str(exc)}, ensure_ascii=False), file=sys.stderr)
         return 2
 
