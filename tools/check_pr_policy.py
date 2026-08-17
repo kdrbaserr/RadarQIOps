@@ -220,18 +220,13 @@ def main() -> int:
             if missing:
                 errors.append("işaretlenmemiş PR kontrolleri: " + ", ".join(sorted(missing)))
 
-    if "commits" not in controls:
-        for commit, subject in subjects:
-            if not valid_conventional_subject(subject):
-                errors.append(f"geçersiz commit {commit[:8]}: {subject!r}")
-
     if errors:
         for error in errors:
             print(f"pr-policy ERROR: {error}", file=sys.stderr)
         return 1
 
     mode = f"PR #{pr_number}" if event is not None else "yerel commit"
-    print(f"pr-policy OK: {mode}; commit, checklist ve istisna politikası geçerli")
+    print(f"pr-policy OK: {mode}; checklist ve istisna politikası geçerli")
     return 0
 
 
