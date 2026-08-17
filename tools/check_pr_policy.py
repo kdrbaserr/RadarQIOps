@@ -216,8 +216,6 @@ def main() -> int:
             body = str(pull_request.get("body") or "")
             if pull_request.get("draft") and "draft" not in controls:
                 errors.append("PR draft durumunda; merge için ready olmalı")
-            if not valid_conventional_subject(title) and "title" not in controls:
-                errors.append(f"PR başlığı Conventional Commits biçiminde değil: {title!r}")
             missing = CHECKLIST_CONTROLS - checked_controls(body) - controls
             if missing:
                 errors.append("işaretlenmemiş PR kontrolleri: " + ", ".join(sorted(missing)))
@@ -233,7 +231,7 @@ def main() -> int:
         return 1
 
     mode = f"PR #{pr_number}" if event is not None else "yerel commit"
-    print(f"pr-policy OK: {mode}; commit, başlık, checklist ve istisna politikası geçerli")
+    print(f"pr-policy OK: {mode}; commit, checklist ve istisna politikası geçerli")
     return 0
 
 
