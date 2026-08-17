@@ -10,5 +10,9 @@ dist/
 build/
 
 artifacts/
-data/
+/data/
+/output/cv/
+/tmp/pdfs/01kadircv-*.png
+/tmp/pdfs/build_01kadircv.py
+/tmp/pdfs/cv_review/
 .ipynb_checkpoints/
