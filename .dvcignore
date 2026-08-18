@@ -1,0 +1,16 @@
+# Add patterns of files dvc should ignore, which could improve
+# the performance. Learn more at
+# https://dvc.org/doc/user-guide/dvcignore
+
+# Development caches may be created by another Windows execution identity.
+# DVC does not need them for data or artifact versioning.
+.git/
+.mypy_cache/
+.pre-commit-cache/
+.pytest_cache/
+.ruff_cache/
+.uv-cache/
+.uv-python/
+.venv/
+output/
+tmp/

@@ -1,0 +1,53 @@
+from __future__ import annotations
+
+import subprocess
+from pathlib import Path
+
+import pytest
+
+ROOT = Path(__file__).resolve().parents[1]
+
+pytestmark = [pytest.mark.unit, pytest.mark.contract]
+
+
+def _is_ignored(path: str) -> bool:
+    result = subprocess.run(
+        ["git", "check-ignore", "--no-index", "--quiet", path],
+        cwd=ROOT,
+        check=False,
+    )
+    return result.returncode == 0
+
+
+def test_dvc_local_remote_is_secret_free() -> None:
+    config = (ROOT / ".dvc" / "config").read_text(encoding="utf-8")
+
+    assert "remote = local" in config
+    assert "url = ../.dvc-storage" in config
+    assert not any(
+        token in config.casefold() for token in ("password", "secret", "token", "credential")
+    )
+
+
+@pytest.mark.parametrize(
+    "path",
+    [
+        "data/raw/dataset.zip",
+        "artifacts/model.onnx",
+        "artifacts/checkpoints/model.ckpt",
+    ],
+)
+def test_large_ml_files_are_ignored_by_git(path: str) -> None:
+    assert _is_ignored(path)
+
+
+@pytest.mark.parametrize(
+    "path",
+    [
+        "data/raw.dvc",
+        "artifacts/model.onnx.dvc",
+        "artifacts/evaluation.json",
+    ],
+)
+def test_dvc_pointers_and_small_evidence_can_be_tracked(path: str) -> None:
+    assert not _is_ignored(path)

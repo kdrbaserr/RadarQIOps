@@ -1,2 +1,13 @@
 version: 1
-exceptions: []
+exceptions:
+  - kind: vulnerability
+    id: PYSEC-2026-2447
+    package: diskcache
+    owner: repo-owner
+    reason: >-
+      DVC 3.67.1 diskcache 5.6.3 bağımlılığını geçişli olarak kullanıyor ve yayımlanmış
+      düzeltme sürümü yok. DVC cache dizinleri yalnız güvenilen kullanıcıya açık yerel alanda
+      veya izole, tek kullanımlık CI runner'ında tutulacak; güvenilmeyen cache arşivi restore
+      edilmeyecek. Düzeltme yayımlandığında istisna kaldırılıp lock yenilenecek.
+    approved_on: 2026-08-18
+    expires_on: 2026-11-16

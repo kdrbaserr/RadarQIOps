@@ -7,6 +7,7 @@ Radar/sensör verilerini incelemek, tekrarlanabilir deneyler yürütmek ve sonu�
 ```powershell
 uv sync --locked --all-extras
 uv run poe install-hooks
+uv run poe dvc-pull
 uv run poe check
 ```
 
@@ -16,6 +17,8 @@ API stack'inin tanımını doğrulamak ve servisi başlatmak için:
 uv run poe compose-config
 uv run poe compose-up
 ```
+
+İlk klonda DVC remote henüz boşsa `dvc-pull` indirilecek dosya bulmaz. Ham veri ve büyük model artifact'ları Git yerine DVC ile sürümlenir; yerel ve CI/full-run remote kurulumu [DVC remote profilleri](docs/dvc-remotes.md) belgesindedir.
 
 Nihai model henüz üretilmediği için API health kontrolü geçer, readiness kontrolü `false` döner. Colab eğitimi Google Drive'da bağımsız yürütülür ve model seçilene kadar bu repo ile senkronize edilmez. Komut ayrıntıları [geliştirici komutları](docs/developer-commands.md) belgesindedir.
 

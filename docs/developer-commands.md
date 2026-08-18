@@ -5,6 +5,10 @@ Tüm yerel geliştirme ve daha sonra eklenecek CI işleri aynı Poe görevlerini
 | Görev | Komut | Amaç |
 |---|---|---|
 | Kurulum | `uv run poe setup` | Kilitli core, serve ve dev ortamını kurar |
+| DVC durum | `uv run poe dvc-status` | Pointer dosyalarını varsayılan DVC remote ile karşılaştırır |
+| DVC indir | `uv run poe dvc-pull` | Yerel remote profilinden veri ve büyük artifact'ları indirir |
+| DVC yükle | `uv run poe dvc-push` | Yerel remote profiline veri ve büyük artifact'ları yükler |
+| Full-run DVC indir | `uv run poe dvc-pull-full` | Çalışma anında yapılandırılmış `full-run` remote'undan indirir |
 | Veri edinimi | `uv run radariq data acquire --config configs/acquire.yaml` | HTTP, yerel dosya veya kullanıcı arşivini atomik olarak raw hedefe alır |
 | Veri kaydı | `uv run radariq data register --config configs/register.yaml` | Raw kaynağı SHA-256, lisans, atıf ve sürümlü manifest ile doğrular |
 | Lint | `uv run poe lint` | Python lint ve import sırası kontrolünü salt-kontrol modunda çalıştırır |
@@ -28,6 +32,8 @@ Tüm yerel geliştirme ve daha sonra eklenecek CI işleri aynı Poe görevlerini
 | Hızlı kontrol | `uv run poe check` | Lint, typecheck, test, integration ve smoke görevlerini sırayla çağırır |
 | Hook kurulumu | `uv run poe install-hooks` | Git pre-commit hook'unu yerel repoya kurar |
 | Pre-commit | `uv run poe precommit` | Tüm hook'ları bütün takip edilen dosyalarda çalıştırır |
+
+Remote kurulumu, DVC'ye dosya ekleme ve CI secret sözleşmesi [DVC remote profilleri](dvc-remotes.md) belgesindedir.
 
 `compose-up` uzun süre çalışan etkileşimli bir görevdir; kullanıcı `Ctrl+C` ile durdurur. Nihai model henüz üretilmediği için `/ready` endpoint'inin `false` dönmesi beklenir.
 

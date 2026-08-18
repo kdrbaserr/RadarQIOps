@@ -9,8 +9,27 @@ __pycache__/
 dist/
 build/
 
-artifacts/
-/data/
+.dvc-storage/
+
+# DVC tracks data/raw as data/raw.dvc; the real directory stays outside Git.
+/data/*
+!/data/*.dvc
+
+# Large model/checkpoint binaries use individual .dvc pointer files. Small JSON
+# manifests and evaluation evidence under artifacts/ remain eligible for Git.
+/artifacts/**/*.ckpt
+/artifacts/**/*.h5
+/artifacts/**/*.hdf5
+/artifacts/**/*.joblib
+/artifacts/**/*.npy
+/artifacts/**/*.npz
+/artifacts/**/*.onnx
+/artifacts/**/*.pkl
+/artifacts/**/*.pt
+/artifacts/**/*.pth
+/artifacts/**/*.safetensors
+/artifacts/**/*.tar
+/artifacts/**/*.zip
 /output/cv/
 /tmp/pdfs/01kadircv-*.png
 /tmp/pdfs/build_01kadircv.py
