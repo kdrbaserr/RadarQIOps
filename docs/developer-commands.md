@@ -11,6 +11,7 @@ Tüm yerel geliştirme ve daha sonra eklenecek CI işleri aynı Poe görevlerini
 | Full-run DVC indir | `uv run poe dvc-pull-full` | Çalışma anında yapılandırılmış `full-run` remote'undan indirir |
 | Veri edinimi | `uv run radariq data acquire --config configs/acquire.yaml` | HTTP, yerel dosya veya kullanıcı arşivini atomik olarak raw hedefe alır |
 | Veri kaydı | `uv run radariq data register --config configs/register.yaml` | Raw kaynağı SHA-256, lisans, atıf ve sürümlü manifest ile doğrular |
+| Raw ingestion | `uv run radariq data ingest --config configs/ingest.yaml` | Doğrulanmış arşivi deterministik kimliklerle değişmez raw stage'e açar |
 | Lint | `uv run poe lint` | Python lint ve import sırası kontrolünü salt-kontrol modunda çalıştırır |
 | Otomatik format | `uv run poe format` | Güvenli Ruff düzeltmelerini ve Python/Markdown formatını yerelde uygular |
 | Format kontrolü | `uv run poe format-check` | Python formatını dosya değiştirmeden kontrol eder |
