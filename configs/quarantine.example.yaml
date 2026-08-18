@@ -1,0 +1,7 @@
+{
+  "policy_version": "1.0",
+  "exact_duplicate_action": "keep_lowest_sample_id",
+  "near_duplicate_action": "quarantine_all",
+  "unresolved_group_action": "quarantine",
+  "evidence_limit_per_error": 3
+}

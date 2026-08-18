@@ -1,0 +1,6 @@
+{
+  "archive_path": "../data/raw/downloads/dataset-2026.08.zip",
+  "raw_root": "../data/raw/ingested",
+  "source_id": "dataset-stable-id",
+  "source_version": "2026.08"
+}
