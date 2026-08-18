@@ -4,6 +4,7 @@ name: PR Policy
   pull_request:
     branches:
       - main
+      - dev
     types:
       - opened
       - edited
@@ -31,3 +32,4 @@ jobs:
 
       - name: Validate PR readiness and checklist
         run: python3 tools/check_pr_policy.py
+
