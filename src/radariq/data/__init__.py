@@ -41,6 +41,14 @@ from radariq.data.manifests import (
     load_data_manifest,
     register_source_from_config,
 )
+from radariq.data.validation import (
+    SampleCandidate,
+    ValidationIssue,
+    ValidationPolicy,
+    ValidationPolicyError,
+    ValidationReport,
+    validate_samples,
+)
 
 __all__ = [
     "CURRENT_SCHEMA_VERSION",
@@ -66,8 +74,13 @@ __all__ = [
     "RawIngestionError",
     "RawIngestionResult",
     "RawMutationError",
+    "SampleCandidate",
     "SchemaVersionError",
     "SourceType",
+    "ValidationIssue",
+    "ValidationPolicy",
+    "ValidationPolicyError",
+    "ValidationReport",
     "acquire",
     "acquire_from_config",
     "assert_schema_version_registered",
@@ -76,4 +89,5 @@ __all__ = [
     "load_data_manifest",
     "register_source_from_config",
     "schema_fingerprint",
+    "validate_samples",
 ]
