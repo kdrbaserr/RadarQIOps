@@ -4,40 +4,37 @@ from datetime import date
 
 import pytest
 
+from tools import check_pr_policy
 from tools.check_pr_policy import (
     CHECKLIST_CONTROLS,
     checked_controls,
-    valid_conventional_subject,
     validate_exception_document,
 )
 
 pytestmark = [pytest.mark.unit, pytest.mark.contract]
 
 
-@pytest.mark.parametrize(
-    "subject",
-    [
-        "feat(api): add inference endpoint",
-        "fix!: change artifact contract",
-        "ci(policy): enforce PR rules",
-        'Revert "feat(api): add inference endpoint"',
-    ],
-)
-def test_valid_commit_subjects(subject: str) -> None:
-    assert valid_conventional_subject(subject)
+def test_pr_title_is_not_validated(monkeypatch: pytest.MonkeyPatch) -> None:
+    body = "\n".join(f"- [x] <!-- policy:{control} --> done" for control in CHECKLIST_CONTROLS)
+    monkeypatch.setattr(
+        check_pr_policy,
+        "_event",
+        lambda: {
+            "number": 42,
+            "pull_request": {
+                "title": "Başlık için herhangi bir biçim kullanılabilir.",
+                "body": body,
+                "draft": False,
+            },
+        },
+    )
+    monkeypatch.setattr(
+        check_pr_policy,
+        "_load_exceptions",
+        lambda: {"version": 1, "exceptions": []},
+    )
 
-
-@pytest.mark.parametrize(
-    "subject",
-    [
-        "general test",
-        "WIP train model",
-        "fixup! feat(api): add endpoint",
-        "feat: sentence ending with period.",
-    ],
-)
-def test_invalid_commit_subjects(subject: str) -> None:
-    assert not valid_conventional_subject(subject)
+    assert check_pr_policy.main() == 0
 
 
 def test_checked_controls_are_extracted() -> None:

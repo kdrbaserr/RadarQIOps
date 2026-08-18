@@ -3,7 +3,6 @@ from __future__ import annotations
 import json
 import os
 import re
-import subprocess
 import sys
 from datetime import date, timedelta
 from pathlib import Path
@@ -11,25 +10,7 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 EXCEPTIONS_PATH = ROOT / "policy" / "exceptions.json"
-POLICY_WORKFLOW = ".github/workflows/pr-policy.yaml"
 MAX_EXCEPTION_DAYS = 30
-COMMIT_TYPES = (
-    "build",
-    "chore",
-    "ci",
-    "docs",
-    "feat",
-    "fix",
-    "perf",
-    "refactor",
-    "revert",
-    "style",
-    "test",
-)
-COMMIT_PATTERN = re.compile(
-    rf"^(?:{'|'.join(COMMIT_TYPES)})(?:\([a-z0-9][a-z0-9._/-]*\))?!?: .+[^.]$"
-)
-BLOCKED_PREFIXES = ("fixup!", "squash!", "wip", "WIP")
 CHECKLIST_CONTROLS = {"scope", "tests", "security", "colab", "docs"}
 CHECKLIST_TEXT = {
     "scope": "PR tek bir anlaşılır amacı kapsıyor",
@@ -40,48 +21,6 @@ CHECKLIST_TEXT = {
 }
 CHECKED_ITEM_PATTERN = re.compile(r"^\s*[-*+]\s+\[[xX]\]\s+(.+)$", re.MULTILINE)
 POLICY_MARKER_PATTERN = re.compile(r"<!--\s*policy:(scope|tests|security|colab|docs)\s*-->")
-
-
-def _git(*args: str) -> str:
-    result = subprocess.run(
-        ["git", *args],
-        cwd=ROOT,
-        check=True,
-        capture_output=True,
-        text=True,
-    )
-    return result.stdout.strip()
-
-
-def valid_conventional_subject(subject: str) -> bool:
-    if subject.startswith(BLOCKED_PREFIXES) or len(subject) > 100:
-        return False
-    if subject.startswith(("Merge pull request #", 'Revert "')):
-        return True
-    return COMMIT_PATTERN.fullmatch(subject) is not None
-
-
-def commit_subjects(base_sha: str, head_sha: str) -> list[tuple[str, str]]:
-    commits = _git("rev-list", "--reverse", f"{base_sha}..{head_sha}").splitlines()
-    subjects = [(commit, _git("show", "-s", "--format=%s", commit)) for commit in commits]
-
-    # The adoption PR may contain older commits created before this policy existed.
-    if _file_exists_at(base_sha, POLICY_WORKFLOW):
-        return subjects
-    for index, (commit, _) in enumerate(subjects):
-        if _file_exists_at(commit, POLICY_WORKFLOW):
-            return subjects[index:]
-    return subjects[-1:]
-
-
-def _file_exists_at(commit: str, path: str) -> bool:
-    result = subprocess.run(
-        ["git", "cat-file", "-e", f"{commit}:{path}"],
-        cwd=ROOT,
-        check=False,
-        capture_output=True,
-    )
-    return result.returncode == 0
 
 
 def checked_controls(body: str) -> set[str]:
@@ -124,8 +63,7 @@ def validate_exception_document(document: dict[str, Any], *, today: date) -> lis
         if not isinstance(controls, list) or not controls:
             errors.append(f"{prefix}.controls boş olmayan liste olmalı")
         elif not all(
-            isinstance(control, str)
-            and (control in CHECKLIST_CONTROLS or control in {"commits", "title", "draft"})
+            isinstance(control, str) and (control in CHECKLIST_CONTROLS or control == "draft")
             for control in controls
         ):
             errors.append(f"{prefix}.controls bilinmeyen kontrol içeriyor")
@@ -191,10 +129,7 @@ def main() -> int:
         exceptions = _load_exceptions()
         exception_errors = validate_exception_document(exceptions, today=date.today())
         event = _event()
-        base_sha = os.getenv("GITHUB_BASE_SHA") or _git("rev-parse", "HEAD^")
-        head_sha = os.getenv("GITHUB_HEAD_SHA") or _git("rev-parse", "HEAD")
-        subjects = commit_subjects(base_sha, head_sha)
-    except (OSError, ValueError, json.JSONDecodeError, subprocess.CalledProcessError) as exc:
+    except (OSError, ValueError, json.JSONDecodeError) as exc:
         print(f"pr-policy ERROR: {exc}", file=sys.stderr)
         return 2
 
@@ -212,28 +147,20 @@ def main() -> int:
                 pr_number=pr_number,
                 today=date.today(),
             )
-            title = str(pull_request.get("title", ""))
             body = str(pull_request.get("body") or "")
             if pull_request.get("draft") and "draft" not in controls:
                 errors.append("PR draft durumunda; merge için ready olmalı")
-            if not valid_conventional_subject(title) and "title" not in controls:
-                errors.append(f"PR başlığı Conventional Commits biçiminde değil: {title!r}")
             missing = CHECKLIST_CONTROLS - checked_controls(body) - controls
             if missing:
                 errors.append("işaretlenmemiş PR kontrolleri: " + ", ".join(sorted(missing)))
-
-    if "commits" not in controls:
-        for commit, subject in subjects:
-            if not valid_conventional_subject(subject):
-                errors.append(f"geçersiz commit {commit[:8]}: {subject!r}")
 
     if errors:
         for error in errors:
             print(f"pr-policy ERROR: {error}", file=sys.stderr)
         return 1
 
-    mode = f"PR #{pr_number}" if event is not None else "yerel commit"
-    print(f"pr-policy OK: {mode}; commit, başlık, checklist ve istisna politikası geçerli")
+    mode = f"PR #{pr_number}" if event is not None else "yerel kontrol"
+    print(f"pr-policy OK: {mode}; readiness, checklist ve istisna politikası geçerli")
     return 0
 
 
