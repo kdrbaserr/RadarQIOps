@@ -1,29 +1,7 @@
-# Commit, pull request ve release politikası
-
-## Commit mesajları
-
-Commit başlığı aşağıdaki biçimi kullanır:
-
-```text
-<type>(<opsiyonel-scope>)<opsiyonel-!>: <kısa açıklama>
-```
-
-İzinli türler: `build`, `chore`, `ci`, `docs`, `feat`, `fix`, `perf`, `refactor`, `revert`, `style`, `test`.
-
-Örnekler:
-
-```text
-feat(api): add inference endpoint
-fix(training): preserve deterministic seed
-ci(policy): enforce PR rules
-feat(artifact)!: change exported model contract
-```
-
-`WIP`, `fixup!` ve `squash!` commitleri PR üzerinde tutulabilir fakat merge öncesinde düzenlenmelidir. `pr-policy` bunları ve standart dışı başlıkları engeller.
+# Pull request ve release politikası
 
 ## Pull request politikası
 
-- PR başlığı da Conventional Commits biçimindedir; squash merge kullanıldığında ana dal commit başlığı olur.
 - `.github/pull_request_template.md` içindeki beş zorunlu kontrol işaretlenir.
 - Draft PR merge edilemez.
 - Bütün required status check'ler yeşil olmalıdır.

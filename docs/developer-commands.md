@@ -5,8 +5,13 @@ Tüm yerel geliştirme ve daha sonra eklenecek CI işleri aynı Poe görevlerini
 | Görev | Komut | Amaç |
 |---|---|---|
 | Kurulum | `uv run poe setup` | Kilitli core, serve ve dev ortamını kurar |
+| DVC durum | `uv run poe dvc-status` | Pointer dosyalarını varsayılan DVC remote ile karşılaştırır |
+| DVC indir | `uv run poe dvc-pull` | Yerel remote profilinden veri ve büyük artifact'ları indirir |
+| DVC yükle | `uv run poe dvc-push` | Yerel remote profiline veri ve büyük artifact'ları yükler |
+| Full-run DVC indir | `uv run poe dvc-pull-full` | Çalışma anında yapılandırılmış `full-run` remote'undan indirir |
 | Veri edinimi | `uv run radariq data acquire --config configs/acquire.yaml` | HTTP, yerel dosya veya kullanıcı arşivini atomik olarak raw hedefe alır |
 | Veri kaydı | `uv run radariq data register --config configs/register.yaml` | Raw kaynağı SHA-256, lisans, atıf ve sürümlü manifest ile doğrular |
+| Raw ingestion | `uv run radariq data ingest --config configs/ingest.yaml` | Doğrulanmış arşivi deterministik kimliklerle değişmez raw stage'e açar |
 | Lint | `uv run poe lint` | Python lint ve import sırası kontrolünü salt-kontrol modunda çalıştırır |
 | Otomatik format | `uv run poe format` | Güvenli Ruff düzeltmelerini ve Python/Markdown formatını yerelde uygular |
 | Format kontrolü | `uv run poe format-check` | Python formatını dosya değiştirmeden kontrol eder |
@@ -22,12 +27,14 @@ Tüm yerel geliştirme ve daha sonra eklenecek CI işleri aynı Poe görevlerini
 | Güvenlik politikası | `uv run poe security-policy` | Lisans, zafiyet eşiği ve süreli istisna kayıtlarını doğrular |
 | Bağımlılık güvenliği | `uv run poe security-dependencies` | Lock zafiyetlerini ve dağıtılan bağımlılık lisanslarını denetler |
 | Bütün güvenlik kontrolleri | `uv run poe security` | Secret, politika, zafiyet ve lisans kontrollerini birlikte çalıştırır |
-| PR/commit politikası | `uv run poe pr-policy` | Son commit mesajını ve süreli politika istisnalarını doğrular |
+| PR politikası | `uv run poe pr-policy` | PR checklist'ini ve süreli politika istisnalarını doğrular |
 | Compose doğrulama | `uv run poe compose-config` | Compose dosyasını parse edip doğrular |
 | Stack başlatma | `uv run poe compose-up` | Lokal API container'ını build edip başlatır |
 | Hızlı kontrol | `uv run poe check` | Lint, typecheck, test, integration ve smoke görevlerini sırayla çağırır |
 | Hook kurulumu | `uv run poe install-hooks` | Git pre-commit hook'unu yerel repoya kurar |
 | Pre-commit | `uv run poe precommit` | Tüm hook'ları bütün takip edilen dosyalarda çalıştırır |
+
+Remote kurulumu, DVC'ye dosya ekleme ve CI secret sözleşmesi [DVC remote profilleri](dvc-remotes.md) belgesindedir.
 
 `compose-up` uzun süre çalışan etkileşimli bir görevdir; kullanıcı `Ctrl+C` ile durdurur. Nihai model henüz üretilmediği için `/ready` endpoint'inin `false` dönmesi beklenir.
 

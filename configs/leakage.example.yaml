@@ -1,0 +1,8 @@
+{
+  "representation": "channels_first",
+  "near_duplicate_enabled": true,
+  "correlation_threshold": 0.999,
+  "quantization_decimals": 3,
+  "remove_dc": true,
+  "allowed_splits": ["train", "validation", "test"]
+}

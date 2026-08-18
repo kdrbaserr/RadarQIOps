@@ -21,6 +21,7 @@ serve = [
 [dependency-groups]
 dev = [
   "detect-secrets>=1.5,<2",
+  "dvc>=3,<4",
   "httpx>=0.28,<1",
   "mdformat>=0.7,<1",
   "mypy>=1.18,<2",
@@ -70,6 +71,10 @@ default-groups = ["dev"]
 
 [tool.poe.tasks]
 setup = { cmd = "uv sync --locked --all-extras", help = "Kilitli yerel geliştirme ortamını kur" }
+dvc-status = { cmd = "dvc status -c", help = "Çalışma alanını varsayılan DVC remote ile karşılaştır" }
+dvc-pull = { cmd = "dvc pull", help = "Varsayılan yerel DVC remote'dan veri ve artifact'ları indir" }
+dvc-push = { cmd = "dvc push", help = "Veri ve artifact'ları varsayılan yerel DVC remote'a yükle" }
+dvc-pull-full = { cmd = "dvc pull -r full-run", help = "CI/full-run remote profilinden veri ve artifact'ları indir" }
 lint = { cmd = "ruff check src tests tools", help = "Python lint ve import sırası kontrolünü çalıştır" }
 lint-fix = { cmd = "ruff check --fix src tests tools", help = "Güvenli Ruff düzeltmelerini yerelde uygula" }
 format-python = { cmd = "ruff format src tests tools", help = "Python kaynaklarını yerelde formatla" }
@@ -86,10 +91,10 @@ colab-evidence = { cmd = "python tools/check_colab_evidence.py", help = "Model d
 security-secrets = { cmd = "python tools/check_tracked_secrets.py", help = "Takip edilen bütün dosyalarda secret tara" }
 security-policy = { cmd = "python tools/check_security_policy.py", help = "Lisans, zafiyet eşiği ve süreli istisnaları doğrula" }
 security-dependencies = { cmd = "python tools/audit_dependencies.py", help = "Lock zafiyetlerini ve runtime lisanslarını denetle" }
-pr-policy = { cmd = "python tools/check_pr_policy.py", help = "Son commit ve repository politika istisnalarını doğrula" }
+pr-policy = { cmd = "python tools/check_pr_policy.py", help = "PR checklist ve repository politika istisnalarını doğrula" }
 compose-config = { cmd = "docker compose -f infra/compose.yaml config --quiet", help = "Compose tanımını doğrula" }
 compose-up = { cmd = "docker compose -f infra/compose.yaml up --build", help = "Lokal API stack'ini oluştur ve başlat" }
-install-hooks = { cmd = "pre-commit install --hook-type pre-commit --hook-type commit-msg", env = { PRE_COMMIT_HOME = ".pre-commit-cache" }, help = "Git pre-commit ve commit-msg hook'larını kur" }
+install-hooks = { cmd = "pre-commit install --hook-type pre-commit", env = { PRE_COMMIT_HOME = ".pre-commit-cache" }, help = "Git pre-commit hook'unu kur" }
 precommit = { cmd = "pre-commit run --all-files", env = { PRE_COMMIT_HOME = ".pre-commit-cache" }, help = "Tüm pre-commit kontrollerini çalıştır" }
 
 [tool.poe.tasks.format]
@@ -119,4 +124,3 @@ unfixable = []
 quote-style = "double"
 indent-style = "space"
 line-ending = "lf"
-
