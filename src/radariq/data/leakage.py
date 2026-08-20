@@ -35,8 +35,13 @@ class LeakageCandidate:
 class GroupIdAdapter(Protocol):
     """Dataset-specific and versioned group derivation rule."""
 
-    rule_name: str
-    rule_version: str
+    @property
+    def rule_name(self) -> str:
+        """Stable adapter rule name."""
+
+    @property
+    def rule_version(self) -> str:
+        """Stable adapter rule version."""
 
     def derive_group_id(self, candidate: LeakageCandidate) -> str | None:
         """Return a stable group identity, or None when evidence is insufficient."""

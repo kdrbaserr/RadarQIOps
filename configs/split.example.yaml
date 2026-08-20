@@ -1,0 +1,16 @@
+{
+  "input_path": "../data/interim/validated_iq.npz",
+  "output_dir": "../data/interim/splits/v1",
+  "source_revision": "dvc:replace-with-data-revision",
+  "split": {
+    "fractions": {
+      "train": 0.70,
+      "validation": 0.15,
+      "test": 0.15
+    },
+    "seed": 20260811,
+    "snr_bin_edges": [-10.0, 0.0, 10.0],
+    "group_rule_name": "explicit-group-id",
+    "group_rule_version": "1.0"
+  }
+}
