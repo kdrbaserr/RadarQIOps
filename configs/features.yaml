@@ -1,4 +1,6 @@
 {
+  "schema_version": "1.0",
+  "output": "canonical_iq",
   "canonical_iq": {
     "target_length": 128,
     "crop": "center",

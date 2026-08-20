@@ -6,6 +6,7 @@ Bu projedeki kullanıcıya görünen önemli değişiklikler bu dosyada belgelen
 
 ### Added
 
+- Shared immutable training/inference feature pipeline with leakage and golden parity tests.
 - Config-selected FFT/spectrogram features with versioned parameters and content-addressed output.
 - Optional amplitude/wrapped-phase features with explicit zero-amplitude phase validity.
 - Configurable crop/padding policy, validity mask and audit metadata for canonical PyTorch I/Q tensors.

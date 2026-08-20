@@ -34,3 +34,15 @@ to the canonical I/Q channels. Padded time samples are zeroed before either tran
 config identity. Output metadata records the full config and its SHA-256. The feature artifact hash
 covers that metadata, tensor values and frequency/time axes, so any config or output change creates
 a different artifact identity.
+
+## Shared training and inference path
+
+`FeaturePipeline` is the only composition point for train-fitted preprocessing, canonical tensor
+conversion and the selected optional representation. It accepts an immutable `preprocessor.json`;
+there is no fit operation in the shared or inference API. `transform_for_training` and
+`transform_for_inference` are deliberately thin adapters over the same transform method.
+
+The versioned golden fixture verifies the complete numerical output and mask for both adapters.
+Changing held-out samples cannot change the fitted preprocessing or pipeline hash because fitting
+receives only the explicit training indices. A mismatch between either runtime path fails the local
+integration suite before model work proceeds.

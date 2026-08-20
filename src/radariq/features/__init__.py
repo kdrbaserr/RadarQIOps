@@ -20,6 +20,16 @@ from radariq.features.canonical import (
     canonical_iq_from_config,
     to_canonical_iq_tensor,
 )
+from radariq.features.pipeline import (
+    FEATURE_PIPELINE_SCHEMA_VERSION,
+    FeatureOutput,
+    FeaturePipeline,
+    FeaturePipelineConfig,
+    FeaturePipelineError,
+    FeatureTensor,
+    transform_for_inference,
+    transform_for_training,
+)
 from radariq.features.spectral import (
     SPECTRAL_SCHEMA_VERSION,
     SpectralConfig,
@@ -36,6 +46,7 @@ from radariq.features.spectral import (
 __all__ = [
     "AMPLITUDE_PHASE_SCHEMA_VERSION",
     "CANONICAL_IQ_SCHEMA_VERSION",
+    "FEATURE_PIPELINE_SCHEMA_VERSION",
     "SPECTRAL_SCHEMA_VERSION",
     "AmplitudePhaseConfig",
     "AmplitudePhaseError",
@@ -45,6 +56,11 @@ __all__ = [
     "CanonicalIQError",
     "CanonicalIQTensor",
     "CropMode",
+    "FeatureOutput",
+    "FeaturePipeline",
+    "FeaturePipelineConfig",
+    "FeaturePipelineError",
+    "FeatureTensor",
     "PaddingMode",
     "SpectralConfig",
     "SpectralFeatureError",
@@ -60,4 +76,6 @@ __all__ = [
     "to_amplitude_phase_tensor",
     "to_canonical_iq_tensor",
     "to_spectral_tensor",
+    "transform_for_inference",
+    "transform_for_training",
 ]
