@@ -4,5 +4,9 @@
     "crop": "center",
     "padding": "right",
     "padding_value": 0.0
+  },
+  "amplitude_phase": {
+    "zero_amplitude_epsilon": 1e-08,
+    "undefined_phase_value": 0.0
   }
 }

@@ -6,6 +6,7 @@ Bu projedeki kullanıcıya görünen önemli değişiklikler bu dosyada belgelen
 
 ### Added
 
+- Optional amplitude/wrapped-phase features with explicit zero-amplitude phase validity.
 - Configurable crop/padding policy, validity mask and audit metadata for canonical PyTorch I/Q tensors.
 - Validation, group-aware split, train-fitted preprocessing ve export raporunu bağlayan DVC hattı.
 - Grup sızıntısını engelleyen deterministik train/validation/test indeksleri ve kilitli test manifesti.

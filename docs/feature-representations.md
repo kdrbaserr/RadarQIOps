@@ -13,3 +13,13 @@ processed data artifacts: stored data remains NumPy while model input is always 
 `configs/features.yaml` selects the target length, start/center/end cropping, left/center/right
 padding and the padding value. Cropping and padding contain no randomness. The same validated
 batch and config therefore produce byte-identical values and masks in training and inference.
+
+## Amplitude and wrapped phase
+
+The optional amplitude/phase transform consumes the canonical tensor and emits two channels in
+the fixed order `[amplitude, wrapped_phase]`. Amplitude is `sqrt(I² + Q²)` and phase is wrapped to
+`[-pi, pi)`. Padding is zeroed and remains excluded by `valid_mask`.
+
+Phase has no physical meaning at zero amplitude. `zero_amplitude_epsilon` defines that boundary;
+`phase_valid_mask=false` marks those points and `undefined_phase_value` supplies a finite configured
+value. This makes the uncertainty explicit and prevents zero-amplitude samples from producing NaN.
