@@ -6,6 +6,7 @@ Bu projedeki kullanıcıya görünen önemli değişiklikler bu dosyada belgelen
 
 ### Added
 
+- Grup sızıntısını engelleyen deterministik train/validation/test indeksleri ve kilitli test manifesti.
 - Train-only fit lineage ile DC offset ve amplitude/power normalizasyon artifact'ları.
 - Notebook bağımsız CLI ile yeniden üretilebilir sınıf/SNR, I/Q, power ve spektrum EDA artifact'ları.
 - Başlangıç repository, kalite, test, PR ve güvenlik otomasyonu.

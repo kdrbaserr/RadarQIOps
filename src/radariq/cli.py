@@ -11,6 +11,7 @@ from radariq.data.eda import EDAError, generate_eda_from_config
 from radariq.data.ingestion import RawIngestionError, ingest_from_config
 from radariq.data.manifests import register_source_from_config
 from radariq.data.preprocessing import PreprocessingError, preprocess_from_config
+from radariq.data.splitting import SplitError, split_from_config
 from radariq.data_inspect import DATASET_CHOICES, InspectError, inspect_dataset
 from radariq.evaluation.pipeline import evaluate_from_config
 from radariq.training.pipeline import train_from_config
@@ -121,6 +122,17 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Canonical NPZ, train indeksleri, politika ve output ayarlarını içeren config",
     )
 
+    split_parser = data_commands.add_parser(
+        "split",
+        help="Sınıf/SNR dengesini gözeten deterministik group-aware indeksler üret",
+    )
+    split_parser.add_argument(
+        "--config",
+        required=True,
+        type=Path,
+        help="Metadata NPZ, split oranları, seed ve output ayarlarını içeren config",
+    )
+
     train_parser = subcommands.add_parser("train", help="Config ile model eğit")
     train_parser.add_argument("--config", type=Path, default=Path("configs/train.yaml"))
 
@@ -185,6 +197,15 @@ def main(argv: Sequence[str] | None = None) -> int:
                 )
             )
             return 0
+        if args.data_command == "split":
+            print(
+                json.dumps(
+                    split_from_config(args.config).as_dict(),
+                    ensure_ascii=False,
+                    indent=2,
+                )
+            )
+            return 0
 
         result = inspect_dataset(
             dataset=args.dataset,
@@ -213,6 +234,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         InspectError,
         OSError,
         PreprocessingError,
+        SplitError,
         KeyError,
         ValueError,
     ) as exc:
