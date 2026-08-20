@@ -1,13 +1,4 @@
 {
   "version": 1,
-  "exceptions": [
-    {
-      "pr": 12,
-      "controls": ["scope"],
-      "owner": "kdrbaserr",
-      "reason": "PR başlık kontrolü geçici olarak devre dışı bırakıldı",
-      "approved_on": "2026-08-17",
-      "expires_on": "2026-09-16"
-    }
-  ]
+  "exceptions": []
 }
