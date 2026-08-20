@@ -1,0 +1,14 @@
+{
+  "input_path": "../data/interim/validated_iq.npz",
+  "train_indices_path": "../data/interim/splits/train_indices.npy",
+  "output_dir": "../data/processed/preprocessing-v1",
+  "source_revision": "dvc:replace-with-data-revision",
+  "preprocessing": {
+    "representation": "channels_first",
+    "remove_dc_offset": true,
+    "normalization": "train_rms_power",
+    "zero_power_epsilon": 1e-12,
+    "max_input_amplitude": 100.0,
+    "reject_zero_power": true
+  }
+}
