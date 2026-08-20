@@ -1,0 +1,24 @@
+{
+  "schema_version": "1.0",
+  "output": "canonical_iq",
+  "canonical_iq": {
+    "target_length": 128,
+    "crop": "center",
+    "padding": "right",
+    "padding_value": 0.0
+  },
+  "amplitude_phase": {
+    "zero_amplitude_epsilon": 1e-08,
+    "undefined_phase_value": 0.0
+  },
+  "spectral": {
+    "enabled": false,
+    "mode": "fft",
+    "n_fft": 128,
+    "window": "hann",
+    "overlap": 0,
+    "scale": "power",
+    "sample_rate_hz": 1.0,
+    "log_epsilon": 1e-12
+  }
+}
