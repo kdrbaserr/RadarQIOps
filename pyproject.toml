@@ -13,6 +13,9 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
+model = [
+  "torch>=2.7,<3",
+]
 serve = [
   "fastapi>=0.116,<1",
   "uvicorn[standard]>=0.35,<1",
@@ -68,6 +71,14 @@ ignore_missing_imports = true
 
 [tool.uv]
 default-groups = ["dev"]
+
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true
+
+[tool.uv.sources]
+torch = { index = "pytorch-cpu" }
 
 [tool.poe.tasks]
 setup = { cmd = "uv sync --locked --all-extras", help = "Kilitli yerel geliştirme ortamını kur" }

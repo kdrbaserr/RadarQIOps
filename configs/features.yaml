@@ -1,0 +1,8 @@
+{
+  "canonical_iq": {
+    "target_length": 128,
+    "crop": "center",
+    "padding": "right",
+    "padding_value": 0.0
+  }
+}

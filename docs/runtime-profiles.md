@@ -9,6 +9,7 @@ Yerel Python `.python-version` ve servis image'ında Python 3.11.15'e sabitlenir
 | Profil | Kurulum | Amaç | Model eğitir mi? |
 |---|---|---|---|
 | `core` | `uv sync --no-dev` | Veri/artifact okuma ve CLI | Hayır |
+| `model` | `uv sync --no-dev --extra model` | PyTorch feature ve model kodu | Hayır |
 | `serve` | `uv sync --no-dev --extra serve` | Inference API | Hayır |
 | `dev` | `uv sync` | Core + yerel test araçları | Hayır |
 
