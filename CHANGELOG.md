@@ -6,6 +6,7 @@ Bu projedeki kullanıcıya görünen önemli değişiklikler bu dosyada belgelen
 
 ### Added
 
+- Explicit runtime-license approval for the official PyTorch wheel SPDX expression.
 - Shared immutable training/inference feature pipeline with leakage and golden parity tests.
 - Config-selected FFT/spectrogram features with versioned parameters and content-addressed output.
 - Optional amplitude/wrapped-phase features with explicit zero-amplitude phase validity.
