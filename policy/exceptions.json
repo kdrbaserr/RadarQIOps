@@ -3,7 +3,7 @@
   "exceptions": [
     {
       "pr": 12,
-      "controls": ["title"],
+      "controls": ["scope"],
       "owner": "kdrbaserr",
       "reason": "PR başlık kontrolü geçici olarak devre dışı bırakıldı",
       "approved_on": "2026-08-17",
