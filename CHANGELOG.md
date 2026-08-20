@@ -6,6 +6,7 @@ Bu projedeki kullanıcıya görünen önemli değişiklikler bu dosyada belgelen
 
 ### Added
 
+- Config-selected FFT/spectrogram features with versioned parameters and content-addressed output.
 - Optional amplitude/wrapped-phase features with explicit zero-amplitude phase validity.
 - Configurable crop/padding policy, validity mask and audit metadata for canonical PyTorch I/Q tensors.
 - Validation, group-aware split, train-fitted preprocessing ve export raporunu bağlayan DVC hattı.

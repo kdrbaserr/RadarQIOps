@@ -23,3 +23,14 @@ the fixed order `[amplitude, wrapped_phase]`. Amplitude is `sqrt(I² + Q²)` and
 Phase has no physical meaning at zero amplitude. `zero_amplitude_epsilon` defines that boundary;
 `phase_valid_mask=false` marks those points and `undefined_phase_value` supplies a finite configured
 value. This makes the uncertainty explicit and prevents zero-amplitude samples from producing NaN.
+
+## Optional spectral representation
+
+The `spectral.enabled` switch is `false` by default. When selected, `mode` produces either an FFT
+tensor `[N, 1, F]` or a spectrogram `[N, 1, F, T]`; spectral values do not get silently appended
+to the canonical I/Q channels. Padded time samples are zeroed before either transform.
+
+`n_fft`, `window`, `overlap`, `scale`, `sample_rate_hz` and the log floor are part of the versioned
+config identity. Output metadata records the full config and its SHA-256. The feature artifact hash
+covers that metadata, tensor values and frequency/time axes, so any config or output change creates
+a different artifact identity.
