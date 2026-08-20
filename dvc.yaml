@@ -1,0 +1,61 @@
+stages:
+  validate:
+    cmd: uv run --no-sync python -m radariq.data.dvc_pipeline validate --params params.yaml
+    deps:
+      - ${pipeline.raw_input}
+      - src/radariq/data/contracts.py
+      - src/radariq/data/dvc_pipeline.py
+      - src/radariq/data/leakage.py
+      - src/radariq/data/quarantine.py
+      - src/radariq/data/validation.py
+    params:
+      - pipeline.raw_input
+      - pipeline.source_revision
+      - validation
+      - leakage
+    outs:
+      - ${pipeline.validation_output}
+
+  split:
+    cmd: uv run --no-sync python -m radariq.data.dvc_pipeline split --params params.yaml
+    deps:
+      - ${pipeline.validation_output}/accepted_iq.npz
+      - src/radariq/data/dvc_pipeline.py
+      - src/radariq/data/splitting.py
+    params:
+      - pipeline.source_revision
+      - split
+    outs:
+      - ${pipeline.split_output}
+
+  preprocess:
+    cmd: uv run --no-sync python -m radariq.data.dvc_pipeline preprocess --params params.yaml
+    deps:
+      - ${pipeline.validation_output}/accepted_iq.npz
+      - ${pipeline.split_output}/train_indices.npy
+      - src/radariq/data/dvc_pipeline.py
+      - src/radariq/data/preprocessing.py
+    params:
+      - pipeline.source_revision
+      - preprocessing
+    outs:
+      - ${pipeline.preprocessing_output}
+
+  report:
+    cmd: uv run --no-sync python -m radariq.data.dvc_pipeline report --params params.yaml
+    deps:
+      - ${pipeline.validation_output}/validation_stage.json
+      - ${pipeline.validation_output}/accepted_iq.npz
+      - ${pipeline.split_output}/split_manifest.json
+      - ${pipeline.split_output}/train_indices.npy
+      - ${pipeline.split_output}/validation_indices.npy
+      - ${pipeline.split_output}/test_indices.npy
+      - ${pipeline.split_output}/test_lock.json
+      - ${pipeline.preprocessing_output}/preprocessor.json
+      - ${pipeline.preprocessing_output}/processed_iq.npz
+      - ${pipeline.preprocessing_output}/preprocessing_artifacts.json
+      - src/radariq/data/dvc_pipeline.py
+    params:
+      - pipeline
+    outs:
+      - ${pipeline.report_output}
