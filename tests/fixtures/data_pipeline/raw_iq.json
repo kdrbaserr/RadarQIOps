@@ -1,0 +1,32 @@
+{
+  "schema_version": "1.0",
+  "representation": "channels_first",
+  "samples": [
+    [[0.10, -0.20, 0.30, -0.40], [0.20, -0.10, 0.40, -0.30]],
+    [[0.11, -0.20, 0.30, -0.40], [0.20, -0.11, 0.40, -0.30]],
+    [[0.12, -0.20, 0.30, -0.40], [0.20, -0.12, 0.40, -0.30]],
+    [[0.13, -0.20, 0.30, -0.40], [0.20, -0.13, 0.40, -0.30]],
+    [[0.14, -0.20, 0.30, -0.40], [0.20, -0.14, 0.40, -0.30]],
+    [[0.15, -0.20, 0.30, -0.40], [0.20, -0.15, 0.40, -0.30]],
+    [[0.16, -0.20, 0.30, -0.40], [0.20, -0.16, 0.40, -0.30]],
+    [[0.17, -0.20, 0.30, -0.40], [0.20, -0.17, 0.40, -0.30]],
+    [[0.18, -0.20, 0.30, -0.40], [0.20, -0.18, 0.40, -0.30]],
+    [[0.19, -0.20, 0.30, -0.40], [0.20, -0.19, 0.40, -0.30]],
+    [[0.20, -0.20, 0.30, -0.40], [0.20, -0.20, 0.40, -0.30]],
+    [[0.21, -0.20, 0.30, -0.40], [0.20, -0.21, 0.40, -0.30]]
+  ],
+  "metadata": [
+    {"sample_id": "sample-00", "label": "BPSK", "snr_db": -15, "group_id": "group-00"},
+    {"sample_id": "sample-01", "label": "QPSK", "snr_db": -5, "group_id": "group-01"},
+    {"sample_id": "sample-02", "label": "BPSK", "snr_db": 5, "group_id": "group-02"},
+    {"sample_id": "sample-03", "label": "QPSK", "snr_db": 15, "group_id": "group-03"},
+    {"sample_id": "sample-04", "label": "BPSK", "snr_db": -15, "group_id": "group-04"},
+    {"sample_id": "sample-05", "label": "QPSK", "snr_db": -5, "group_id": "group-05"},
+    {"sample_id": "sample-06", "label": "BPSK", "snr_db": 5, "group_id": "group-06"},
+    {"sample_id": "sample-07", "label": "QPSK", "snr_db": 15, "group_id": "group-07"},
+    {"sample_id": "sample-08", "label": "BPSK", "snr_db": -15, "group_id": "group-08"},
+    {"sample_id": "sample-09", "label": "QPSK", "snr_db": -5, "group_id": "group-09"},
+    {"sample_id": "sample-10", "label": "BPSK", "snr_db": 5, "group_id": "group-10"},
+    {"sample_id": "sample-11", "label": "QPSK", "snr_db": 15, "group_id": "group-11"}
+  ]
+}

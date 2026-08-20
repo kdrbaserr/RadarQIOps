@@ -75,6 +75,8 @@ dvc-status = { cmd = "dvc status -c", help = "Çalışma alanını varsayılan D
 dvc-pull = { cmd = "dvc pull", help = "Varsayılan yerel DVC remote'dan veri ve artifact'ları indir" }
 dvc-push = { cmd = "dvc push", help = "Veri ve artifact'ları varsayılan yerel DVC remote'a yükle" }
 dvc-pull-full = { cmd = "dvc pull -r full-run", help = "CI/full-run remote profilinden veri ve artifact'ları indir" }
+dvc-repro = { cmd = "dvc repro", help = "Validation, split, preprocessing ve rapor DVC hattını yeniden üret" }
+data-pipeline-export = { cmd = "python tools/check_data_pipeline_export.py --manifest artifacts/data-pipeline/fixture-v1/pipeline_export_manifest.json", help = "Küçük pipeline export manifestini veri dosyalarını açmadan doğrula" }
 lint = { cmd = "ruff check src tests tools", help = "Python lint ve import sırası kontrolünü çalıştır" }
 lint-fix = { cmd = "ruff check --fix src tests tools", help = "Güvenli Ruff düzeltmelerini yerelde uygula" }
 format-python = { cmd = "ruff format src tests tools", help = "Python kaynaklarını yerelde formatla" }

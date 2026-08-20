@@ -1,0 +1,3 @@
+# DVC pipeline export directories are content-addressed outputs, not Git sources.
+/*
+!/.gitignore

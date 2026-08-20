@@ -1,0 +1,201 @@
+schema: '2.0'
+stages:
+  validate:
+    cmd: uv run --no-sync python -m radariq.data.dvc_pipeline validate --params
+      params.yaml
+    deps:
+    - path: src/radariq/data/contracts.py
+      hash: md5
+      md5: 1b6531a437a6af499a70da5789407476
+      size: 8319
+    - path: src/radariq/data/dvc_pipeline.py
+      hash: md5
+      md5: ddf572410dc39be0900859465c0c3468
+      size: 25098
+    - path: src/radariq/data/leakage.py
+      hash: md5
+      md5: 2df7fb42bd0d62e0fbfc22aadb011b1b
+      size: 21621
+    - path: src/radariq/data/quarantine.py
+      hash: md5
+      md5: 943e0d92d06b430eca4b8dc99065b425
+      size: 23019
+    - path: src/radariq/data/validation.py
+      hash: md5
+      md5: 39bee21eeb2f43f3ab4deffcfc78a677
+      size: 14317
+    - path: tests/fixtures/data_pipeline/raw_iq.json
+      hash: md5
+      md5: b674de3726bcca19f9a4cfd06d4d191f
+      size: 1895
+    params:
+      params.yaml:
+        leakage:
+          representation: channels_first
+          near_duplicate_enabled: false
+          correlation_threshold: 0.999
+          quantization_decimals: 3
+          remove_dc: true
+          allowed_splits:
+          - train
+          - validation
+          - test
+        pipeline.raw_input: tests/fixtures/data_pipeline/raw_iq.json
+        pipeline.source_revision: fixture:raw-iq-v1
+        validation:
+          representation: channels_first
+          signal_length: 4
+          allowed_labels:
+          - BPSK
+          - QPSK
+          snr_min_db: -20
+          snr_max_db: 20
+          max_amplitude: 2
+          min_power: 1e-08
+          max_power: 8
+          constant_tolerance: 1e-07
+    outs:
+    - path: data/validation/fixture-v1
+      hash: md5
+      md5: 532167659d2c551f212b9210cbd46d11.dir
+      size: 6892
+      nfiles: 6
+  split:
+    cmd: uv run --no-sync python -m radariq.data.dvc_pipeline split --params
+      params.yaml
+    deps:
+    - path: data/validation/fixture-v1/accepted_iq.npz
+      hash: md5
+      md5: 52780020798c5ee1f8d330da430297cc
+      size: 2646
+    - path: src/radariq/data/dvc_pipeline.py
+      hash: md5
+      md5: ddf572410dc39be0900859465c0c3468
+      size: 25098
+    - path: src/radariq/data/splitting.py
+      hash: md5
+      md5: 1a3728f771aafad9ef11bd64335bbc3e
+      size: 32546
+    params:
+      params.yaml:
+        pipeline.source_revision: fixture:raw-iq-v1
+        split:
+          fractions:
+            train: 0.5
+            validation: 0.25
+            test: 0.25
+          seed: 20260811
+          snr_bin_edges:
+          - -10
+          - 0
+          - 10
+          group_rule_name: explicit-group-id
+          group_rule_version: '1.0'
+    outs:
+    - path: data/interim/splits/fixture-v1
+      hash: md5
+      md5: 591e04fc59a1e7c0f8b9d3909d88a979.dir
+      size: 7694
+      nfiles: 6
+  preprocess:
+    cmd: uv run --no-sync python -m radariq.data.dvc_pipeline preprocess
+      --params params.yaml
+    deps:
+    - path: data/interim/splits/fixture-v1/train_indices.npy
+      hash: md5
+      md5: eda5e54d2b38834db383467f75f8f582
+      size: 160
+    - path: data/validation/fixture-v1/accepted_iq.npz
+      hash: md5
+      md5: 52780020798c5ee1f8d330da430297cc
+      size: 2646
+    - path: src/radariq/data/dvc_pipeline.py
+      hash: md5
+      md5: ddf572410dc39be0900859465c0c3468
+      size: 25098
+    - path: src/radariq/data/preprocessing.py
+      hash: md5
+      md5: 7b9809c9b47ef0faef89177feac57d00
+      size: 22455
+    params:
+      params.yaml:
+        pipeline.source_revision: fixture:raw-iq-v1
+        preprocessing:
+          representation: channels_first
+          remove_dc_offset: true
+          normalization: train_rms_power
+          zero_power_epsilon: 1e-12
+          max_input_amplitude: 100
+          reject_zero_power: true
+    outs:
+    - path: data/processed/fixture-v1
+      hash: md5
+      md5: e28ad063830be93b5d9d2d6f971e8c95.dir
+      size: 3987
+      nfiles: 3
+  report:
+    cmd: uv run --no-sync python -m radariq.data.dvc_pipeline report --params
+      params.yaml
+    deps:
+    - path: data/interim/splits/fixture-v1/split_manifest.json
+      hash: md5
+      md5: 6ecfea62fbc9a50b63dfd6b23ae9c783
+      size: 6088
+    - path: data/interim/splits/fixture-v1/test_indices.npy
+      hash: md5
+      md5: 2696d0c68775f0b2aba5af789852e346
+      size: 160
+    - path: data/interim/splits/fixture-v1/test_lock.json
+      hash: md5
+      md5: db4efae749a2d5df7022b3ce5424e492
+      size: 423
+    - path: data/interim/splits/fixture-v1/train_indices.npy
+      hash: md5
+      md5: eda5e54d2b38834db383467f75f8f582
+      size: 160
+    - path: data/interim/splits/fixture-v1/validation_indices.npy
+      hash: md5
+      md5: 6ba3920ead7804f57759c61edde16298
+      size: 160
+    - path: data/processed/fixture-v1/preprocessing_artifacts.json
+      hash: md5
+      md5: b402d70883d87349f94e359a24da3406
+      size: 627
+    - path: data/processed/fixture-v1/preprocessor.json
+      hash: md5
+      md5: 5380b8593463932d4570fcb4bb88b18f
+      size: 714
+    - path: data/processed/fixture-v1/processed_iq.npz
+      hash: md5
+      md5: 0a60c457e25908bbfe5433f476091d6d
+      size: 2646
+    - path: data/validation/fixture-v1/accepted_iq.npz
+      hash: md5
+      md5: 52780020798c5ee1f8d330da430297cc
+      size: 2646
+    - path: data/validation/fixture-v1/validation_stage.json
+      hash: md5
+      md5: ee2dcb06b9e34ad9c48683193fc24bed
+      size: 629
+    - path: src/radariq/data/dvc_pipeline.py
+      hash: md5
+      md5: ddf572410dc39be0900859465c0c3468
+      size: 25098
+    params:
+      params.yaml:
+        pipeline:
+          raw_input: tests/fixtures/data_pipeline/raw_iq.json
+          validation_output: data/validation/fixture-v1
+          split_output: data/interim/splits/fixture-v1
+          preprocessing_output: data/processed/fixture-v1
+          report_output: artifacts/data-pipeline/fixture-v1
+          source_revision: fixture:raw-iq-v1
+          execution_profile: fixture
+          dvc_remote: local
+          dvc_pull_status: fixture
+    outs:
+    - path: artifacts/data-pipeline/fixture-v1
+      hash: md5
+      md5: e3c4968426a5063c26d15c3b16cee2b1.dir
+      size: 1681
+      nfiles: 1
