@@ -1,0 +1,8 @@
+{
+  "input_path": "../data/interim/validated_iq.npz",
+  "output_dir": "../artifacts/eda",
+  "representation": "channels_first",
+  "source_id": "radioml-2016.10a",
+  "source_revision": "dvc:replace-with-data-revision",
+  "max_spectra": 3
+}

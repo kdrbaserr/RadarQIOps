@@ -22,6 +22,14 @@ from radariq.data.contracts import (
     assert_schema_version_registered,
     schema_fingerprint,
 )
+from radariq.data.eda import (
+    EDA_SCHEMA_VERSION,
+    EDAArtifactResult,
+    EDAConfig,
+    EDAError,
+    generate_eda_artifacts,
+    generate_eda_from_config,
+)
 from radariq.data.ingestion import (
     RAW_INGESTION_SCHEMA_VERSION,
     IngestionStatus,
@@ -79,6 +87,7 @@ from radariq.data.validation import (
 __all__ = [
     "CURRENT_SCHEMA_VERSION",
     "DATA_MANIFEST_SCHEMA_VERSION",
+    "EDA_SCHEMA_VERSION",
     "IQ_SCHEMA_DEFINITION",
     "QUARANTINE_SCHEMA_VERSION",
     "RAW_INGESTION_SCHEMA_VERSION",
@@ -96,6 +105,9 @@ __all__ = [
     "DataSourceManifest",
     "DuplicateLeakageReport",
     "DuplicatePolicy",
+    "EDAArtifactResult",
+    "EDAConfig",
+    "EDAError",
     "ExactDuplicateCluster",
     "ExplicitGroupIdAdapter",
     "GroupIdAdapter",
@@ -131,6 +143,8 @@ __all__ = [
     "analyze_duplicates_and_leakage",
     "assert_schema_version_registered",
     "build_quarantine_decision",
+    "generate_eda_artifacts",
+    "generate_eda_from_config",
     "ingest_archive",
     "ingest_from_config",
     "load_data_manifest",
