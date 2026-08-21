@@ -1,0 +1,9 @@
+{
+  "seed": 42,
+  "data_config": "configs/data.yaml",
+  "output_dir": "artifacts/baseline",
+  "test_fraction": 0.2,
+  "learning_rate": 0.1,
+  "epochs": 200,
+  "l2": 0.0
+}
