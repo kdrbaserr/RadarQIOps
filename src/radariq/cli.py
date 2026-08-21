@@ -14,6 +14,7 @@ from radariq.data.preprocessing import PreprocessingError, preprocess_from_confi
 from radariq.data.splitting import SplitError, split_from_config
 from radariq.data_inspect import DATASET_CHOICES, InspectError, inspect_dataset
 from radariq.evaluation.pipeline import evaluate_from_config
+from radariq.training.baseline import run_baseline_from_config
 from radariq.training.pipeline import train_from_config
 
 
@@ -136,6 +137,11 @@ def _build_parser() -> argparse.ArgumentParser:
     train_parser = subcommands.add_parser("train", help="Config ile model eğit")
     train_parser.add_argument("--config", type=Path, default=Path("configs/train.yaml"))
 
+    baseline_parser = subcommands.add_parser(
+        "baseline", help="Sabit split ile klasik lojistik regresyon baseline'ını çalıştır"
+    )
+    baseline_parser.add_argument("--config", type=Path, default=Path("configs/baseline.yaml"))
+
     evaluate_parser = subcommands.add_parser("evaluate", help="Modeli değerlendir")
     evaluate_parser.add_argument("--config", type=Path, default=Path("configs/evaluate.yaml"))
     return parser
@@ -148,6 +154,9 @@ def main(argv: Sequence[str] | None = None) -> int:
     try:
         if args.command == "train":
             print(json.dumps(train_from_config(args.config), ensure_ascii=False, indent=2))
+            return 0
+        if args.command == "baseline":
+            print(json.dumps(run_baseline_from_config(args.config), ensure_ascii=False, indent=2))
             return 0
         if args.command == "evaluate":
             print(json.dumps(evaluate_from_config(args.config), ensure_ascii=False, indent=2))
